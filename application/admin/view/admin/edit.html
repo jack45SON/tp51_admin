@@ -1,0 +1,90 @@
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="x_panel">
+                <div class="x_content">
+                    <br/>
+                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/admin/admin/edit',true);">
+                        <input type="hidden" name="id" value="{$data.id}">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3" for="name">{$Think.lang.name}<span
+                                    class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="name" class="form-control col-md-7 col-xs-12" name="name" value="{$data.name}"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="old_password" class="control-label col-md-3">{$Think.lang.old_password}<span
+                                    class="required">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="old_password" type="password" name="old_password"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="password" class="control-label col-md-3">{$Think.lang.password}<span
+                                    class="required">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="password" type="password" name="password"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="res_password"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.res_password}<span
+                                    class="required">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="res_password" type="password" name="res_password"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.status}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div id="status" class="btn-group" data-toggle="buttons">
+                                    <label class='btn btn-default {eq name="$data.status" value="0" } active {/eq}' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="status" value="0"{eq name="$data.status" value="0" } checked {/eq}> &nbsp; {$Think.lang.status0} &nbsp;
+                                    </label>
+                                    <label class='btn btn-default {eq name="$data.status" value="1" } active {/eq}' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="status" value="1" {eq name="$data.status" value="1" } checked {/eq}> {$Think.lang.status1}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="group_ids" class="control-label col-md-3">{$Think.lang.group}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="group_ids"class="form-control js-example-basic-multiple" name="group_ids[]" required  multiple="multiple">
+                                    {foreach $group as $vo}
+                                    <option value="{$vo.id}" data-id="{$vo.id}" {if condition="in_array($vo.id,$adminGroup)"} selected {/if}>
+                                    {$vo.name}
+                                    </option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button type="reset" class="btn btn-primary">{$Think.lang.reset}</button>
+                                <button type="submit"  class="btn btn-success">{$Think.lang.submit}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{block name="js"}
+<script>
+    $(function () {
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>后台登录</title>
+
+    <!-- Bootstrap -->
+    {load href="/static/admin/vendors/bootstrap/dist/css/bootstrap.min.css"/}
+    <!-- Font Awesome -->
+    {load href="/static/admin/vendors/font-awesome/css/font-awesome.min.css"/}
+    <!-- NProgress -->
+    {load href="/static/admin/vendors/nprogress/nprogress.css"/}
+    <!-- Animate.css -->
+    {load href="/static/admin/vendors/animate.css/animate.min.css"/}
+    <!-- Custom Theme Style -->
+    {load href="/static/admin/build/css/custom.min.css"/}
+    {load href="/static/admin/Lobibox.min.css"/}
+    <style>
+      .form-control{
+          height: 54px;
+      }
+    </style>
+  </head>
+
+  <body class="login">
+    <div>
+
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form id="login">
+              <h1>管理员登录</h1>
+              <div>
+                <input type="text" name="name" class="form-control" placeholder="用户名" required />
+              </div>
+              <div>
+                <input type="password" name="password" class="form-control" placeholder="密码" required/>
+              </div>
+              <div>
+                  <input id="captcha" name="captcha" class="form-control" type="text" placeholder="验证码" style="width:40%;" required>
+                <img src="/admin/login/chkCode" onclick="this.src=this.src+'?'" alt="点击更换验证码" id="_captcha" style="" class="form-control" >
+              </div>
+              <div>
+                <a class="btn btn-default submit" onclick="return login();">登录</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <div>
+                  <!--<h1><img style="width: 50px;height: 50px;" src="/uploads/img/admin_avatar/20180710/7d961483129e447da5a2566bd93a6b5a.png">{:Env::get('admin_conf.title')}</h1>-->
+                  <p>©2018 All Rights Reserved.</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+    {load href="/static/admin/vendors/jquery/dist/jquery.min.js"/}
+    {load href="/static/admin/vendors/bootstrap/dist/js/bootstrap.min.js"/}
+    {load href="/static/admin/vendors/fastclick/lib/fastclick.js"/}
+    {load href="/static/admin/vendors/nprogress/nprogress.js"/}
+    {load href="/static/admin/vendors/iCheck/icheck.min.js"/}
+    {load href="/static/admin/vendors/Chart.js/dist/Chart.min.js"/}
+    {load href="/static/admin/lobibox.min.js"/}
+  <script>
+    function login() {
+        $.ajax({
+            type:'post',
+            url: '/admin/login/index',
+            data: $('#login').serialize(),
+            dataType: 'json',
+            cache: false,
+            success:function(ret){
+                if(Number(ret.status) === 1) {
+                    Lobibox.alert('success',{msg: ret.message,closed: function () {
+                        location.href=ret.url;
+                    }});
+                }else {
+                    $('#_captcha').attr('src','/admin/login/chkCode'+'?');
+                    if(ret.message) Lobibox.alert('error',{msg: ret.message});
+                    else Lobibox.alert('error',{msg: '返回未知错误！'});
+                }
+                return false;
+            },
+            error:function(data){
+                Lobibox.alert('error',{msg:  '操作失败'});
+            }
+        });
+    }
+  </script>
+  </body>
+</html>

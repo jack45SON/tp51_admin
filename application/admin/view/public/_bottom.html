@@ -1,0 +1,59 @@
+{load href="/static/admin/vendors/jquery/dist/jquery.min.js"/}
+{load href="/static/admin/vendors/bootstrap/dist/js/bootstrap.min.js"/}
+{load href="/static/admin/vendors/fastclick/lib/fastclick.js"/}
+{load href="/static/admin/vendors/nprogress/nprogress.js"/}
+{load href="/static/admin/vendors/iCheck/icheck.min.js"/}
+{load href="/static/admin/vendors/Chart.js/dist/Chart.min.js"/}
+{load href="/static/admin/vendors/jquery-sparkline/dist/jquery.sparkline.min.js"/}
+{load href="/static/admin/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"/}
+{load href="/static/admin/vendors/moment/min/moment.min.js"/}
+{load href="/static/admin/vendors/bootstrap-daterangepicker/daterangepicker.js"/}
+{load href="/static/admin/vendors/jquery.tagsinput/src/jquery.tagsinput.js"/}
+<!-- Select2 -->
+{load href="/static/admin/vendors/select2/dist/js/select2.full.min.js"/}
+{load href="/static/admin/vendors/raphael/raphael.min.js"/}
+{load href="/static/admin/vendors/morris.js/morris.min.js"/}
+{load href="/static/admin/vendors/gauge.js/dist/gauge.min.js"/}
+{load href="/static/admin/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"/}
+{load href="/static/admin/vendors/skycons/skycons.js"/}
+{load href="/static/admin/vendors/Flot/jquery.flot.js"/}
+{load href="/static/admin/vendors/Flot/jquery.flot.pie.js"/}
+{load href="/static/admin/vendors/Flot/jquery.flot.time.js"/}
+{load href="/static/admin/vendors/Flot/jquery.flot.stack.js"/}
+{load href="/static/admin/vendors/Flot/jquery.flot.resize.js"/}
+{load href="/static/admin/vendors/flot.orderbars/js/jquery.flot.orderBars.js"/}
+{load href="/static/admin/vendors/flot-spline/js/jquery.flot.spline.min.js"/}
+{load href="/static/admin/vendors/flot.curvedlines/curvedLines.js"/}
+{load href="/static/admin/vendors/DateJS/build/date.js"/}
+{load href="/static/admin/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"/}
+{load href="/static/admin/build/js/custom.min.js"/}
+{load href="/static/admin/common.js"/}
+{load href="/static/admin/common_data.js"/}
+{load href="/static/admin/common_image.js"/}
+{load href="/static/admin/common_video.js"/}
+
+{load href="/static/admin/echarts.common.min.js"/}
+{load href="/static/admin/lobibox.min.js"/}
+{load href="/static/admin/layer/layer.js"/}
+<script>
+    $('.collapse-search').click(function () {
+        window.location.href = '{:url()}?'+$('.searchFrom').serialize();
+    });
+    $('.collapse-reset').click(function () {
+        $(':input','.searchFrom')
+            .not(':button,:submit,:reset,:hidden')
+            .val('')
+            .removeAttr('checked')
+            .removeAttr('selected');
+        window.location.href = '{:url()}?'+$('.searchFrom').serialize();
+    });
+
+    $('.collapse-export').click(function () {
+        window.location.href = $(this).data('url')+'?'+$('.searchFrom').serialize();
+    });
+
+    $('#jumpPage').on('click', function(){
+        location.href = location.href.split('?')[0]+"?page="+$('#pageNum').val();
+    })
+</script>
+

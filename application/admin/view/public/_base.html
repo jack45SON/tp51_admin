@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {block name="title"}<title>后台首页</title>{/block}
+    {block name="top"}{include file="public/_top" /}{/block}
+    <style type="text/css">
+    table {
+        table-layout: fixed;
+    }
+
+    td {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .editor_column{
+        color: #0088cc;
+        display: inline-block;
+        border-bottom: dashed 1px #0088cc;
+        cursor: pointer;
+    }
+
+    .layui-layer-content{
+       height: 250px;
+    }
+
+    .btn-default.active{
+        background-color: #f0ad4e;
+        color: #000;
+    }
+
+    ._current-page {
+        background: rgba(255,255,255,.05);
+    }
+    ._current-page a {
+        color: #fff!important;
+    }
+    </style>
+</head>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        {block name="left"}{include file="public/_left" /}{/block}
+        <!-- top navigation -->
+        {block name="nav"}{include file="public/_nav" /}{/block}
+        <!-- /top navigation -->
+        <!-- page content -->
+        {block name="right"}{/block}
+        <!-- /page content -->
+        <!-- footer content -->
+        {block name="footer"}{include file="public/_footer" /}{/block}
+        <!-- /footer content -->
+    </div>
+</div>
+{block name="bottom"}
+{include file="public/_bottom" /}
+{/block}
+
+{block name="js"}{/block}
+</body>
+</html>

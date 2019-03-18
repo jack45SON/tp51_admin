@@ -1,0 +1,137 @@
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="x_panel">
+                <div class="x_content">
+                    <br/>
+                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/admin/Menu/add',true);">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3" for="name">{$Think.lang.name}<span
+                                    class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="name" class="form-control col-md-7 col-xs-12" name="name"
+                                       required="required" type="text">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="parent_id" class="control-label col-md-3">{$Think.lang.parent_id}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="parent_id" class="select2_single form-control js-example-basic-multiple " name="parent_id"
+                                        required>
+                                    <option value="0" selected>{$Think.lang.top_parent_id}</option>
+                                    {foreach $parent as $vo}
+                                    <option value="{$vo.id}" data-id="{$vo.id}">
+                                        {:str_repeat('-', 4*$vo.level).$vo.name}
+                                    </option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="module"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.module}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="module" type="text" name="module"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="level"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.level}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="level" class="select2_single form-control" name="level">
+                                    <option value="1">{$Think.lang.auth_level_1}</option>
+                                    <option value="2">{$Think.lang.auth_level_2}</option>
+                                    <option value="3">{$Think.lang.auth_level_3}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="controller"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.controller}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="controller" type="text" name="controller"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="action"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.action}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="action" type="text" name="action"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="action"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.params}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="params" type="text" name="params"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.status}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div id="status" class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="status" value="0"> &nbsp; {$Think.lang.status0} &nbsp;
+                                    </label>
+                                    <label class="btn btn-default active">
+                                        <input type="radio" name="status" value="1" checked> {$Think.lang.status1}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.is_show}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div id="is_show" class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="is_show" value="0"> &nbsp; {$Think.lang.no} &nbsp;
+                                    </label>
+                                    <label class="btn btn-default active" data-toggle-class="btn-default" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="is_show" value="1" checked> {$Think.lang.yes}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="icon"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.icon}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="icon" type="text" name="icon"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label for="sort"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.sort}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="sort" type="text" name="sort"
+                                       class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button type="reset" class="btn btn-primary">{$Think.lang.reset}</button>
+                                <button type="submit"  class="btn btn-success">{$Think.lang.submit}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{block name="js"}
+<script>
+    $(function () {
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,92 @@
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="x_panel">
+                <div class="x_content">
+                    <br/>
+                    <form class="form-horizontal" method="post" action=""
+                          onsubmit="return AddEditFrom(this,'/admin/admin/detail',true)">
+                        <input type="hidden" class="form-control" value="{$data.id}" name="id"/>
+                        <input type="hidden" class="form-control" value="{$id}" name="admin_id"/>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.nickname}</label>
+                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="nickname"
+                                       value="{$data.nickname}" required
+                                       data-msg="昵称" placeholder="昵称"/>
+                                <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.sex}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div id="sex" class="btn-group" data-toggle="buttons">
+                                    <label class='btn btn-default {eq name="$data.sex" value="0" } active {/eq}' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="sex" value="0"{eq name="$data.sex" value="0" } checked {/eq}> &nbsp; {$Think.lang.sex0} &nbsp;
+                                    </label>
+                                    <label class='btn btn-default {eq name="$data.sex" value="1" } active {/eq}' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="sex" value="1" {eq name="$data.sex" value="1" } checked {/eq}> {$Think.lang.sex1}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.mobile}</label>
+                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                <input type="number" class="form-control" id="mobile"
+                                       value="{$data.mobile}" name="mobile" placeholder="{$Think.lang.mobile}">
+
+                                <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.email}</label>
+                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" id="email"
+                                       value="{$data.email}" name="email" placeholder="{$Think.lang.email}">
+                                <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.qq}</label>
+                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                <input type="number" class="form-control" id="qq"
+                                       value="{$data.qq}" name="qq" placeholder="{$Think.lang.qq}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.avatar}</label>
+                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                {if condition="$data.avatar"}
+                                <input type="text" class="form-control" value="{$data.avatar}" name="avatar" readonly
+                                       onclick="uploadImgOne(this);" placeholder="选择图片" required data-msg="{$Think.lang.avatar}"/>
+                                <input type="hidden" class="form-control attach_id" value="{$data.attach_id}" name="attach_id" />
+                                <span class="fa fa-folder form-control-feedback right" aria-hidden="true"></span>
+                                <p class="m-top-sm" style="margin-top: 10px;">
+                                    <img src="{$data.avatar}" width="120"/>
+                                </p>
+                                {else /}
+                                <input type="text" class="form-control" value="{$data.avatar}" name="avatar" readonly
+                                       onclick="uploadImgOne(this);" placeholder="选择图片"/>
+                                <input type="hidden" class="form-control attach_id" value="{$data.attach_id}" name="attach_id"/>
+                                <span class="fa fa-folder form-control-feedback right" aria-hidden="true"></span>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-3"></label>
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="reset" class="btn btn-primary">{$Think.lang.reset}</button>
+                                <button type="submit" class="btn btn-success">{$Think.lang.submit}</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
