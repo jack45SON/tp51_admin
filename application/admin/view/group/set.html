@@ -1,54 +1,31 @@
-{extend name="public/_base" /}
 
-{block name="title"}<title>管理员信息 - 管理员管理</title>{/block}
+<div class="x_content">
+    <div class="table-responsive">
+        <!--<table class="table table-striped jambo_table bulk_action">-->
+            <table cellspacing="1" cellpadding="3" width="100%">
+                <tr>
+                    <td class="label">权限列表：</td>
+                    <td style="width: 80%">
+                        {foreach $priMenus as $key=>$val}
+                            {:str_repeat('- ', $val['level'] * 8);}
+                            {if condition="in_array($val.id,$menu_ids)"}
+                                <input checked level="{$val.level}" type="checkbox" name="pri_id[]" value="{$val.id}" />{$val.name} <br />
+                            {else/}
 
-{block name="right"}
-<div class="right_col" role="main">
-    <div class="">
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>设置管理组权限</h2>
-                        <ul class="nav navbar-right panel_toolbox">
-                        </ul>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="x_content">
-                        <div class="table-responsive">
-                            <!--<table class="table table-striped jambo_table bulk_action">-->
-                                <table cellspacing="1" cellpadding="3" width="100%">
-                                    <tr>
-                                        <td class="label">权限列表：</td>
-                                        <td style="width: 80%">
-                                            {foreach $priMenus as $key=>$val}
-                                                {:str_repeat('- ', $val['level'] * 8);}
-                                                {if condition="in_array($val.id,$menu_ids)"}
-                                                    <input checked level="{$val.level}" type="checkbox" name="pri_id[]" value="{$val.id}" />{$val.name} <br />
-                                                {else/}
-
-                                                <input  level="{$val.level}" type="checkbox" name="pri_id[]" value="{$val.id}" />{$val.name} <br />
-                                                {/if}
-                                            {/foreach}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="99" align="center">
-                                            <button type="submit" class="btn btn-success" onclick="confirm('{$group_id}','/admin/Group/setPrivilege')">{$Think.lang.submit}</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            <!--</table>-->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            <input  level="{$val.level}" type="checkbox" name="pri_id[]" value="{$val.id}" />{$val.name} <br />
+                            {/if}
+                        {/foreach}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="99" align="center">
+                        <button type="submit" class="btn btn-success" onclick="confirm('{$group_id}','/admin/Group/setPrivilege',true)">{$Think.lang.submit}</button>
+                    </td>
+                </tr>
+            </table>
+        <!--</table>-->
     </div>
 </div>
-{/block}
-
 {block name="js"}
 <script type="text/javascript">
     function confirm(pg_id,url,is_reload){

@@ -80,12 +80,18 @@ function editor_radio(_ths, url) {
 
     var _this = _ths.find('button');
     var id = _this.data('id');
-    var column = _this.data('column');
+    var field = _this.data('field');
     var value = _this.data('value');
 
-    console.log(_this);
     var _class = value == 1 ? 'btn-danger' : 'btn-success';
-    var name = value == 1 ? '否' : '是';
+
+
+    if(field == 'status'){
+        var name = value == 1 ? '禁止' : '正常';
+    }else{
+        var name = value == 1 ? '否' : '是';
+    }
+
     var _value = value == 1 ? '0' : 1;
     layer.load();
     $.ajax({
@@ -94,7 +100,7 @@ function editor_radio(_ths, url) {
         dataType: 'json',
         data: {
             'id': id,
-            'column': column,
+            'field': field,
             'value': _value
         },
         success: function (ret) {
@@ -102,7 +108,7 @@ function editor_radio(_ths, url) {
             layer.msg(ret.message);
             if (Number(ret.status) === 1) {
                 var str = '<p class="edit_radio_btn">' +
-                    '<button type="button" class="btn ' + _class + ' btn-sm" data-column="' + column + '" data-id="' + id + '" data-value="' + _value + '">' + name +
+                    '<button type="button" class="btn ' + _class + ' btn-sm" data-field="' + field + '" data-id="' + id + '" data-value="' + _value + '">' + name +
                     '</button></p>';
                 _ths.html(str);
             }
@@ -112,9 +118,9 @@ function editor_radio(_ths, url) {
 }
 
 
-function editor_column(_ths, url) {
+function editor_field(_ths, url) {
     var id = _ths.data('id');
-    var column = _ths.data('column');
+    var field = _ths.data('field');
     var _value = _ths.data('value');
     layer.prompt(
         {
@@ -129,7 +135,7 @@ function editor_column(_ths, url) {
                 dataType: "json",
                 data: {
                     'id': id,
-                    'column': column,
+                    'field': field,
                     'value': pass
                 },
                 success: function (ret) {

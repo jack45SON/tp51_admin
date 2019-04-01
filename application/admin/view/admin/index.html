@@ -16,7 +16,7 @@
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
                             <li>
-                                <a onclick='pageTable("添加管理员","/admin/admin/add","",400);'>添加</a>
+                                {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/add', '添加','add')}
                             </li>
                         </ul>
                         <div class="clearfix"></div>
@@ -27,37 +27,29 @@
                             <table class="table table-striped jambo_table bulk_action">
                                 <thead>
                                 <tr class="headings">
-                                    <th width="3%">
-                                        <input type="checkbox" id="check-all" class="flat"/>
-                                    </th>
                                     <th class="column-title">Id</th>
-                                    <th class="column-title">管理员</th>
-                                    <th class="column-title">状态</th>
-                                    <th class="column-title">创建时间</th>
-                                    <th class="column-title">修改时间</th>
-                                    <th class="column-title">操作管理</th>
-                                    <th class="bulk-actions" colspan="9">
-                                        <a class="antoo" style="color:#fff; font-weight:500;">批量操作 ( <span
-                                                class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                                    </th>
+                                    <th class="column-title">{$Think.lang.name}</th>
+                                    <th class="column-title">{$Think.lang.status}</th>
+                                    <th class="column-title">{$Think.lang.create_time}</th>
+                                    <th class="column-title">{$Think.lang.update_time}</th>
+                                    <th class="column-title">{$Think.lang.action}</th>
                                 </tr>
 
                                 </thead>
                                 <tbody>
                                 {foreach $data as $vo }
                                 <tr class="even pointer">
-                                    <td class="a-center ">
-                                        <input type="checkbox" class="flat" name="table_records" value="{$vo.id}">
-                                    </td>
                                     <td>{$vo.id}</td>
                                     <td>{$vo.name}</td>
-                                    <td>{$vo.status==1?'正常':'禁用'}</td>
+                                    <td>
+                                        {:yesOrNo('status',$vo.status,$vo.id)}
+                                    </td>
                                     <td>{$vo.create_time}</td>
                                     <td>{$vo.update_time}</td>
                                     <td>
                                         <p class="url">
-                                            <a class='btn btn-info btn-xs' onclick='pageTable("编辑管理员","/admin/admin/edit","{$vo.id}",500);'>编辑</a>
-                                            <a class='btn btn-info btn-xs' onclick='pageTable("管理员详情","/admin/admin/detail","{$vo.id}",600);'>详情</a>
+                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id)}
+                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/detail', '详情','detail',true,$vo.id)}
                                         </p>
                                     </td>
                                 </tr>
@@ -73,4 +65,15 @@
     </div>
 </div>
 <!-- /page content -->
+{/block}
+
+{block name="js"}
+<script language="javascript">
+
+    $(document).ready(function () {
+        $('.edit_radio_btn').on('click',function () {
+            editor_radio($(this), '/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit')
+        });
+    });
+</script>
 {/block}

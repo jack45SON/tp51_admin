@@ -7,7 +7,7 @@
  * Time: 上午10:42
  */
 
-namespace app\common\model;
+namespace app\admin\model;
 
 class WxInfo extends Base
 {

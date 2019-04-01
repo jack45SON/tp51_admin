@@ -23,12 +23,14 @@ class Login extends Controller
         }
         if (request()->isPost()) {
             $data = input('post.');
-            $validate = validate('Admin');
+            $validate = new \app\admin\validate\admin();
             if (!$validate->scene('login')->check($data)) {
                 return show(-1, $validate->getError());
             }
+            $AdminModel = new \app\admin\model\Admin();
+
             try {
-                $admin = model('Admin')->get(['name' => $data['name']]);
+                $admin = $AdminModel->get(['name' => $data['name']]);
             } catch (\Exception $e) {
                 return show(-1, $e->getMessage());
             }
@@ -48,7 +50,7 @@ class Login extends Controller
 
             try {//登录成功操作
                 $this->_loginSuccess($admin);
-                return show(1, lang('login_success'),[], '/admin/index/index');
+                return show(1, lang('login_success'),[], 'index/index');
             } catch (\Exception $e) {
                 return show(-1, $e->getMessage());
             }
@@ -82,7 +84,7 @@ class Login extends Controller
     public function layout()
     {
         session(null,config('admin.session_admin_scope'));
-        $this->redirect('/admin/Login/index');
+        $this->redirect('Login/index');
     }
 
     /**
@@ -98,11 +100,12 @@ class Login extends Controller
             'last_time'   => time(),
             'last_ip'     => ipToInt(request()->ip())
         ];
-        model('Admin')->allowField(true)
+        $AdminModel = new \app\admin\model\Admin();
+        $AdminModel->allowField(true)
             ->save($upData, [
                 'id' => $admin['id']
             ]);
-        $admin = model('Admin')->with('adminInfo')->find($admin['id']);
+        $admin = $AdminModel->with('adminInfo')->find($admin['id']);
 
         session(config('admin.session_admin_id'), $admin['id'],config('admin.session_admin_scope'));
         session(config('admin.session_admin_user'), $admin,config('admin.session_admin_scope'));

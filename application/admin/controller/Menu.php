@@ -2,14 +2,15 @@
 
 namespace app\admin\controller;
 
+use app\admin\service\MenuService;
+
 class Menu extends Base
 {
-    public static $model;
-
     public function initialize()
     {
         parent::initialize();
-        self::$model = model('Menu');
+        $this->model = new \app\admin\model\Menu();
+        $this->service = new MenuService($this->model);
     }
 
     /**
@@ -20,7 +21,7 @@ class Menu extends Base
      */
     public function index()
     {
-        $menu = self::$model
+        $menu = $this->model
             ->where('level','eq',1)
             ->order('sort asc')
             ->paginate(1,false,['query'=>request()->param()]);
@@ -33,7 +34,7 @@ class Menu extends Base
         $child1 = [];
         $child2 = [];
         if($arr){
-            $child1 = self::$model
+            $child1 = $this->model
                 ->where('parent_id','in',$arr)
                 ->order('sort asc')
                 ->select()->toArray();
@@ -42,7 +43,7 @@ class Menu extends Base
                 $arr1[]= $v['id'];
             }
             if($arr1){
-                $child2 = self::$model
+                $child2 = $this->model
                     ->where('parent_id','in',$arr1)
                     ->order('sort asc')
                     ->select()->toArray();
@@ -50,7 +51,7 @@ class Menu extends Base
         }
 
         $_data = array_merge($parent['data'],$child1,$child2);
-        $data = self::$model->getTree($_data);
+        $data = $this->model->getTree($_data);
         return $this->fetch('', [
             'data'      => $data,
             'count'         => $menu->total(),
@@ -70,8 +71,8 @@ class Menu extends Base
             return $this->save();
         }
         $where[] = ['level','neq',3];
-        $parent = self::$model->getMenusByCondition($where);
-        $parent = self::$model->getTree($parent);
+        $parent = $this->model->getMenusByCondition($where);
+        $parent = $this->model->getTree($parent);
         return $this->fetch('',['parent'=>$parent]);
     }
 
@@ -89,9 +90,9 @@ class Menu extends Base
         $id = request()->param('id');
         if ($id) {
             $where[] = ['level','neq',3];
-            $parent = self::$model->getMenusByCondition($where);
-            $parent = self::$model->getTree($parent);
-            $data = self::$model->find($id);
+            $parent = $this->model->getMenusByCondition($where);
+            $parent = $this->model->getTree($parent);
+            $data = $this->model->find($id);
             return $this->fetch('', [
                 'data'      => $data,
                 'parent'    => $parent,
@@ -110,52 +111,47 @@ class Menu extends Base
     {
         if (request()->isAjax() && request()->isPost()) {
             $data = input('post.');
-            $validate = validate('Menu');
             $is_update = true;
-
+            $scene = 'add';
             if (isset($data['id']) && $data['id'] > 0) {
-
-                $children = $this->getChild($data['id']);
-                if(in_array($data['parent_id'],$children) || $data['parent_id']==$data['id']){
-                    return show(-1, '父类选择有误');
+                //单独设置修改时
+                if(isset($data['field'])&&$data['field']){
+                    $data[$data['field']]=$data['value'];
+                    $scene = 'edit';
+                }else{
+                    $children = $this->getChild($data['id']);
+                    if(in_array($data['parent_id'],$children) || $data['parent_id']==$data['id']){
+                        return show(-1, '父类选择有误');
+                    }
+                    $where[] = ['id', 'neq', $data['id']];
                 }
-
-                $where[] = ['id', 'neq', $data['id']];
-                $data['update_admin'] = $this->adminId;
-
             } else {
                 $is_update = false;
-                $data['create_admin'] = $this->adminId;
             }
 
             //当方法名存在的时候，判断url地址是否已存在
-            if($data['action'] && $data['params']) {
+            if(isset($data['action']) && $data['action'] && isset($data['params']) && $data['params']) {
                 $where[] = ['module', 'eq', $data['module']];
                 $where[] = ['controller', 'eq', $data['controller']];
                 $where[] = ['action', 'eq', $data['action']];
                 $where[] = ['params', 'eq', $data['params']];
-
-                $count = self::$model->where($where)->count();
+                $count = $this->model->where($where)->count();
                 if ($count) {
                     return show(-1, lang('controller_action_unique'));
                 }
             }
 
-            //验证字段属性
-            if (!$validate->scene('add')->check($data)) {
-                return show(-1, $validate->getError());
+            if($is_update){
+                $result = $this->service->edit($data,$scene);
+            }else{
+                $result = $this->service->add($data,$scene);
             }
-
-            try {
-                $id = self::$model->addEdit($data,'id', $is_update);
-            } catch (\Exception $e) {
-                return show(-1, $e->getMessage());
-            }
-
-            if ($id) {
+            if ($result['status'] > 0) {
+                session(config('admin.session_admin_auth') . $this->adminId,null,config('admin.session_admin_scope'));
+                session(config('admin.session_admin_menu'),null,config('admin.session_admin_scope'));
                 return show(1, lang('action_success'));
             } else {
-                return show(-1, lang('action_fail'));
+                return show(-1, $result['message']);
             }
         } else {
             return exception(lang('request_illegal'));
@@ -164,7 +160,7 @@ class Menu extends Base
 
     private function getChild($id)
     {
-        $data = self::$model->select();
+        $data = $this->model->select();
         return $this->_child($data, $id);
     }
 

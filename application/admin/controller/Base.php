@@ -2,15 +2,54 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\AdminGroup;
+use app\admin\model\GroupMenu;
 use think\Controller;
 use think\facade\Lang;
 use think\facade\View;
 
 class Base extends Controller
 {
+    /**
+     * 管理员id
+     * @var
+     */
     protected $adminId;
+
+    /**
+     * 管理员详情
+     * @var
+     */
     protected $adminUser;
+
+    /**
+     * 管理员分组
+     * @var
+     */
     protected $adminGroup;
+
+    /**
+     * 是否开启权限限制
+     * @var bool
+     */
+    private   $auth = false;
+
+    /**
+     * 模型层
+     * @var
+     */
+    protected  $model;
+
+    /**
+     * 服务层
+     * @var
+     */
+    protected  $service;
+
+    /**
+     * 引入后台控制器的traits
+     */
+    use \app\admin\library\traits\Backend;
 
     public function initialize()
     {
@@ -43,8 +82,9 @@ class Base extends Controller
             }
 
         } else {
-            if ($this->adminId != 1) {
-                $auth = $this->checkAuth();
+            $GroupMenuModel = new GroupMenu();
+            if ($this->adminId != 1 && $this->auth) {
+                $auth = $this->checkAuth($GroupMenuModel);
                 if ($auth['flag']) {
                     $menus = $auth['data'];
                 } else {
@@ -61,7 +101,7 @@ class Base extends Controller
                     }
                 }
             } else {
-                $GroupMenu = model('GroupMenu')
+                $GroupMenu = $GroupMenuModel
                     ->column('menu_id');
                 session(config('admin.session_admin_auth') . $this->adminId, $GroupMenu, config('admin.session_admin_scope'));
                 $menus = $this->getMenus();
@@ -102,12 +142,13 @@ class Base extends Controller
      * @Author: liu tao
      * @return array
      */
-    protected function checkAuth()
+    protected function checkAuth($GroupMenuModel)
     {
-        $AdminGroup = model('AdminGroup')
+        $AdminGroupModel = new AdminGroup();
+        $AdminGroup = $AdminGroupModel
             ->where('admin_id', 'eq', $this->adminId)
             ->column('group_id');
-        $GroupMenu = model('GroupMenu')
+        $GroupMenu = $GroupMenuModel
             ->where('group_id', 'in', $AdminGroup)
             ->column('menu_id');
 
@@ -119,7 +160,8 @@ class Base extends Controller
                 'action' => ACTION_NAME,
             ];
 
-            $auth = model('Menu')->where($where)->select();
+            $MenuModel  = new \app\admin\model\Menu();
+            $auth = $MenuModel->where($where)->select();
             $auth = $auth->toArray();
             if (count($auth) > 1) {
                 $flag = commonAuth($auth, $GroupMenu);
@@ -154,8 +196,8 @@ class Base extends Controller
         if ($ids) {
             $where[] = ['id', 'in', $ids];
         }
-
-        $menus = model('Menu')
+        $MenuModel  = new \app\admin\model\Menu();
+        $menus = $MenuModel
             ->where('level', 'in', [1, 2])
             ->where('is_show', 'eq', 1)
             ->where('status', 'eq', 1)

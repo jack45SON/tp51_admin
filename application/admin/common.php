@@ -25,6 +25,9 @@ if (!function_exists('authAction')) {
                 'add'           => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('add') . "</a>",
                 'import'        => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('import') . "</a>",
                 'edit'          => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('edit') . "</a>",
+                'detail'        => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('detail') . "</a>",
+
+                'setPrivilege'          => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('setPrivilege') . "</a>",
                 'delete'        => "<a class='btn btn-danger btn-xs' onclick='deleteData(\"$rule\",$param);'>" . lang('delete') . "</a>",
                 'restore'       => "<a class='btn btn-success btn-xs' onclick='deleteData(\"$rule\",$param);'>" . lang('restore') . "</a>",
 
@@ -327,26 +330,26 @@ if (!function_exists('yesOrNo')) {
      * @Description: todo()
      * @Author: liu tao
      * @Time: 2019/3/18 下午2:29
-     * @param $column
+     * @param $field
      * @param $value
      * @param $id
      * @param bool $flag
      * @return string
      */
-    function yesOrNo($column, $value, $id, $flag = true)
+    function yesOrNo($field, $value, $id, $flag = true)
     {
         if ($flag) {
             if ($value) {
                 $class = 'btn-success';
-                $name = '是';
+                $name = $field == 'status'?'正常':'是';
             } else {
                 $class = 'btn-danger';
-                $name = '否';
+                $name = $field == 'status'?'禁止':'否';
             }
-            $btn = '<button type="button" class="btn ' . $class . ' btn-sm" data-id="' . $id . '" data-column="' . $column . '" data-value="' . $value . '">' . $name . '</button>';
+            $btn = '<button type="button" class="btn ' . $class . ' btn-sm" data-id="' . $id . '" data-field="' . $field . '" data-value="' . $value . '">' . $name . '</button>';
             $str = '<p class="edit_radio_btn">' . $btn . '</p>';
         } else {
-            $str = '<p class="editor_column" data-id="' . $id . '" data-column="' . $column . '" data-value="' . $value . '">' . $value . '</p>';
+            $str = '<p class="editor_field" data-id="' . $id . '" data-field="' . $field . '" data-value="' . $value . '">' . $value . '</p>';
         }
         return $str;
     }

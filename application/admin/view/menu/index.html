@@ -53,8 +53,12 @@
                                     <td>{$vo.controller}</td>
                                     <td>{$vo.action}</td>
                                     <td>{$vo.params}</td>
-                                    <td>{$vo.status==1?'正常':'禁用'}</td>
-                                    <td>{$vo.is_show==1?'是':'否'}</td>
+                                    <td>
+                                        {:yesOrNo('status',$vo.status,$vo.id)}
+                                    </td>
+                                    <td>
+                                        {:yesOrNo('is_show',$vo.is_show,$vo.id)}
+                                    </td>
                                     <td>{$vo.create_time}</td>
                                     <td>{$vo.update_time}</td>
                                     <td>
@@ -75,4 +79,15 @@
     </div>
 </div>
 <!-- /page content -->
+{/block}
+
+
+{block name="js"}
+<script language="javascript">
+    $(document).ready(function () {
+        $('.edit_radio_btn').on('click',function () {
+            editor_radio($(this), '/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit')
+        });
+    });
+</script>
 {/block}

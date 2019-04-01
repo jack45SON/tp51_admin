@@ -1,5 +1,5 @@
 <?php
-namespace app\common\model;
+namespace app\admin\model;
 
 use think\Model;
 
@@ -7,6 +7,12 @@ class Base extends Model
 {
     public function insertUpdate($data, $id, $is_update = true)
     {
+        $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
+        if($is_update){
+            $data['update_admin'] = $adminId;
+        }else{
+            $data['create_admin'] = $adminId;
+        }
         $this->isUpdate($is_update)->allowField(true)->save($data);
         return $this->$id;
     }

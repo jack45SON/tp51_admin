@@ -2,34 +2,24 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\AdminInfo;
+use app\admin\service\AdminService;
 use app\common\lib\IAuth as IAuth;
 use think\Db;
+use think\Exception;
+use think\exception\PDOException;
 
 class Admin extends Base
 {
-    public static $model;
+    
 
     public function initialize()
     {
         parent::initialize();
-        self::$model = model('admin');
+        $this->model = new \app\admin\model\Admin();
+        $this->service = new AdminService($this->model);
     }
 
-    /**
-     * @Title: index
-     * @Description: todo(管理员列表)
-     * @Author: liu tao
-     * @return mixed
-     */
-    public function index()
-    {
-        $admin = self::$model->paginate(20);
-        return $this->fetch('', [
-            'data'      => $admin,
-            'count'     => $admin->total(),
-            'page'      => $admin->render(),
-        ]);
-    }
 
     /**
      * @Title: add
@@ -43,8 +33,9 @@ class Admin extends Base
             return $this->save();
         }
 
-        $group = model('group')->select();
-        return $this->fetch('',['group'=>$group]);
+        $GroupModel = new \app\admin\model\Group();
+        $group = $GroupModel->select();
+        return $this->fetch('',compact('group'));
 
     }
 
@@ -62,9 +53,10 @@ class Admin extends Base
 
         $id = request()->param('id');
         if ($id) {
-            $admin = self::$model->with('adminInfo')->find($id);
+            $admin = $this->model->with('adminInfo')->find($id);
             $adminGroup = $admin->adminGroup()->where('admin_id','eq',$id)->column('group_id');
-            $group = model('Group')->select();
+            $GroupModel = new \app\admin\model\Group();
+            $group = $GroupModel->select();
             return $this->fetch('', [
                 'data'          => $admin,
                 'group'         => $group,
@@ -85,17 +77,15 @@ class Admin extends Base
     {
         if (request()->isAjax() && request()->isPost()) {
             $data = input('post.');
-            $is_update = true;
-            //id存在且不为0，则是修改密码，否则新增管理用户
+            $is_update = false;
+            //id存在且不为0，则是修改，否则新增
             if (isset($data['id']) && $data['id'] > 0) {
-                $data['update_admin']    = $this->adminId;
-            } else {
-                $is_update = false;
-                $data['create_admin']    = $this->adminId;
+                $is_update = true;
             }
 
             try {
-                $id = model('AdminInfo')->addEdit($data,'id' ,$is_update);
+                $AdminInfoModel = new AdminInfo();
+                $id = $AdminInfoModel->insertUpdate($data,'id' ,$is_update);
             } catch (\Exception $e) {
                 return show(-1, $e->getMessage());
             }
@@ -128,119 +118,105 @@ class Admin extends Base
     {
         if (request()->isAjax() && request()->isPost()) {
             $data = input('post.');
-            $validate = validate('Admin');
             $is_update = true;
-            $group_ids = $data['group_ids'];
+            $scene = 'add';
+            $alone = false;
             //id存在且不为0，则是修改密码，否则新增管理用户
             if (isset($data['id']) && $data['id'] > 0) {
-                $up_data = [
-                    'id'                => $data['id'],
-                    'name'              => trim($data['name']),
-                    'password'          => trim($data['password']),
-                    'res_password'      => trim($data['res_password']),
-                    'old_password'      => trim($data['old_password']),
-                    'status'            => $data['status'],
-                ];
 
-                if($up_data['id'] == 1 && $up_data['status'] !=config('admin.admin_status_normal')){
+                //单独设置修改时
+                if(isset($data['field'])&&$data['field']){
+                    $data[$data['field']]=$data['value'];
+                    $alone = true;
+                }
+                //超级管理员禁止操作
+                if($data['id'] == 1 && $data['status'] != config('admin.admin_status_normal')){
                     return show(-1, lang('supper_stop'));
                 }
-
-                if ($up_data['name'] || $up_data['password']) {
-                    $up_data['update_admin']  = $this->adminId;
-                    //修改用户名
-                    if ($up_data['name']) {
-                        $admin = self::$model->where([
-                            'name' => $up_data['name']
-                        ])->select();
-                        //判断用户名是否唯一
-                        if (count($admin) != 1 || $admin[0]['id'] != $up_data['id']) {
-                            return show(-1, lang('name_unique'));
-                        }
-                    } else {
-                        unset($up_data['name']);
-                    }
-
-                    //修改密码
-                    if ($up_data['password']) {
-                        //判断2次密码是否一样
-                        if ($up_data['password'] !== $up_data['res_password']) {
-                            return show(-1, lang('res_password_confirm'));
-                        }
-                        $admin  = self::$model->find($up_data['id']);
-                        $pwd    = IAuth::setPassword($up_data['old_password'],$admin['encrypt']);
-                        //判断旧密码是否正确
-                        if ($pwd != $admin['password']) {
-                            return show(-1, lang('old_password_right'));
-                        }
-                        $up_data['encrypt']       = createRandomStr();
-                        $up_data['password']      = IAuth::setPassword($up_data['password'],$up_data['encrypt']);
-                    } else {
-                        unset($up_data['password']);
-                    }
-                    $data = $up_data;
+                //修改密码
+                if (isset($data['password']) && $data['password']) {
+                    $data['encrypt']       = createRandomStr();
+                    $data['password']      = IAuth::setPassword($data['password'],$data['encrypt']);
+                    $data['res_password']     = IAuth::setPassword($data['res_password'],$data['encrypt']);
                 } else {
-                    return exception(lang('request_illegal'));
+                    $scene = 'edit';
+                    unset($data['password']);
                 }
-
-
             } else {
                 $is_update = false;
-                if (!$validate->scene('add')->check($data)) {
-                    return show(-1, $validate->getError());
-                }
                 //添加插入数据
                 $data['encrypt']      = createRandomStr();
                 $data['password']     = IAuth::setPassword($data['password'],$data['encrypt']);
-                $data['create_admin'] = $this->adminId;
+                $data['res_password'] = IAuth::setPassword($data['res_password'],$data['encrypt']);
                 $data['status']       = config('admin.admin_status_normal');
                 $data['reg_ip']       = ipToInt(request()->ip());
             }
 
-
             Db::startTrans();
-            try {
-                $id = self::$model->addEdit($data,'id',$is_update);
-            } catch (\Exception $e) {
-                return show(-1, $e->getMessage());
+            if($is_update){
+                $result = $this->service->edit($data,$scene);
+            }else{
+                $result = $this->service->add($data,$scene);
             }
-
             //添加或者编辑成功进行管理员分组处理
-            if ($id) {
-                $id = $is_update?$data['id']:$id;
-                $del = model('AdminGroup')->where('admin_id','eq',$id)->delete();
-
-                if($del === false){
-                    Db::rollback();
-                    return show(-1, lang('action_fail'));
-                }
-                $adminGroup =[];
-                foreach ($group_ids as $v){
-                    $adminGroup[]=[
-                        'group_id'      =>$v,
-                        'admin_id'      =>$id
-                    ];
-                }
-                try {
-                    $id = model('AdminGroup')->saveAll($adminGroup);
-                } catch (\Exception $e) {
-                    Db::rollback();
-                    return show(-1, $e->getMessage());
-                }
-
-                if ($id) {
+            if ($result['status'] > 0) {
+                if(isset($data['group_ids']) && $data['group_ids'] && !$alone){
+                    $result = $this->adminGroup($result['data']['id'],$data['group_ids']);
+                    if($result['status'] < 1){
+                        Db::rollback();
+                    }else{
+                        Db::commit();
+                    }
+                    return show($result['status'],$result['message']);
+                }else{
                     Db::commit();
-                    return show(1, lang('action_success'));
-                } else {
-                    Db::rollback();
-                    return show(-1, lang('action_fail'));
+                    return show(1,lang('action_success'));
                 }
             } else {
                 Db::rollback();
-                return show(-1, lang('action_fail'));
+                return show(-1, $result['message']);
             }
         } else {
             return exception(lang('request_illegal'));
         }
+    }
+
+    /**
+     * @Title: adminGroup
+     * @Description: todo(管理员的管理组操作)
+     * @Author: liu tao
+     * @Time: 2019/4/1 下午4:25
+     * @param $id
+     * @param $group_ids
+     * @return array
+     */
+    private function adminGroup($id,$group_ids){
+        $result = [
+            'status'  => -1,
+            'message' => lang('action_fail'),
+        ];
+        //删除管理员所有分组
+        $AdminGroupModel = new \app\admin\model\AdminGroup();
+        $del = $AdminGroupModel->where('admin_id','eq',$id)->delete();
+        if($del !== false){
+            $adminGroup =[];
+            foreach ($group_ids as $v){
+                $adminGroup[]=[
+                    'group_id'      =>$v,
+                    'admin_id'      =>$id
+                ];
+            }
+            try {
+                $id = $AdminGroupModel->isUpdate(false)->allowField(true)->saveAll($adminGroup);
+                if ($id) {
+                    $result = ['status'  => 1, 'message'  => lang('action_success')];
+                }
+            } catch (Exception $e) {
+                $result['message' ] = $e->getMessage();
+            } catch (PDOException $e) {
+                $result['message' ] = $e->getMessage();
+            }
+        }
+        return $result;
     }
 }
