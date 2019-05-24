@@ -40,7 +40,7 @@ function pageTable(title,url,id,height) {
             }
         },
         callback: function (res) {
-
+            window.location.reload();
         }
     });
 }

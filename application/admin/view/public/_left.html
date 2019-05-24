@@ -11,7 +11,7 @@
         <!-- menu profile quick info -->
         <div class="profile clearfix">
             <div class="profile_pic">
-                <img src="{$adminUser.admin_info.avatar}" alt="..." class="img-circle profile_img">
+                <img src="{$adminUser.admin_info.avatar ?? '/static/admin/production/images/avatar.png'}" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
                 <span>欢迎,</span>
@@ -27,10 +27,14 @@
             <div class="menu_section">
                 <ul class="nav side-menu">
                     {foreach $menus as $vo}
-                    <li class='{//:getNavP($vo.id)}'><a><i class="fa {:$vo.icon?$vo.icon:'fa-home'}"></i> {$vo.name} <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
+                    <li class='{:getNavP($vo.id)}'><a><i class="fa {:$vo.icon?$vo.icon:'fa-home'}"></i> {$vo.name} <span class="fa fa-chevron-down"></span></a>
+                        {if condition="getNavP($vo.id) eq 'active'"}
+                            <ul class="nav child_menu" style="display: block;">
+                        {else/}
+                            <ul class="nav child_menu">
+                        {/if}
                             {foreach $vo.children as $v}
-                            <li><a href="/{$v.module}/{$v.controller}/{$v.action}{:$v.params?'?'.$v.params:''}">{$v.name}</a></li>
+                                <li class='{:getNav($v.id)}'><a href="/{$v.module}/{$v.controller}/{$v.action}{:$v.params?'?'.$v.params:''}">{$v.name}</a></li>
                             {/foreach}
                         </ul>
                     </li>

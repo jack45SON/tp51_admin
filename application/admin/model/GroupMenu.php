@@ -11,5 +11,6 @@ namespace app\admin\model;
 
 class GroupMenu extends Base
 {
-    protected $pk = 'id';
+    // 表名
+    protected $table = 'group_menu';
 }

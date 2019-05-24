@@ -24,6 +24,6 @@ class Group extends Validate
 
     protected $scene = [
         'add'       => ['name'],
-        'edit'      => ['id']
+        'edit'      => ['id','name']
     ];
 }

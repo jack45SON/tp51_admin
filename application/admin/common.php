@@ -74,26 +74,17 @@ if (!function_exists('authCheck')) {
             'status'        => 1,
         ];
         $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
-        $GroupMenu = session(config('admin.session_admin_auth') . $adminId, '', config('admin.session_admin_scope'));
-        $auth = model('Menu')->where($where)->select()->toArray();
-        if (count($auth) > 1) {
-            $flag = commonAuth($auth, $GroupMenu);
-            if ($flag) {
-                return false;
-            }
-        } else {
-            if (empty($auth) || !in_array($auth[0]['id'], $GroupMenu)) {
-                return false;
-            }
-        }
-        return true;
+        $redis = redis(1);
+        $Auth = new \app\admin\lib\Auth($adminId,$redis);
+        $GroupMenu = json_decode($redis->get(config('admin.session_admin_auth') . $adminId),true);
+        return $Auth::authCheck($GroupMenu,$where);
     }
 }
 
 if (!function_exists('getNavP')) {
     /**
      * @Title: getNavP
-     * @Description: todo()
+     * @Description: todo(一级菜单)
      * @Author: liu tao
      * @Time: xxx
      * @param $parent_id
@@ -108,38 +99,17 @@ if (!function_exists('getNavP')) {
             'action'        => strtolower(request()->action()),
         ];
 
-        $auth = model('Menu')->where($where)->select()->toArray();
-
-        if (count($auth) > 1) {
-            $flag = commonAuth($auth, $parent_id, 2);
-            if ($flag) {
-                return '';
-            }
-            return 'active';
-        }
-
-        if (count($auth) > 0) {
-            if ($auth[0]['level'] == 3) {
-                $menu = model('Menu')->field('parent_id')->find($auth[0]['parent_id']);
-                if ($parent_id == $menu->parent_id) {
-                    return 'active';
-                }
-            }
-            if ($auth[0]['level'] == 2) {
-                if ($parent_id == $auth[0]['parent_id']) {
-                    return 'active';
-                }
-            }
-
-        }
-        return '';
+        $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
+        $redis = redis(1);
+        $Auth = new \app\admin\lib\Auth($adminId,$redis);
+        return $Auth::getNavP($parent_id,$where);
     }
 }
 
 if (!function_exists('getNav')) {
     /**
      * @Title: getNav
-     * @Description: todo()
+     * @Description: todo(二级，三级菜单)
      * @Author: liu tao
      * @Time: xxx
      * @param $id
@@ -148,10 +118,21 @@ if (!function_exists('getNav')) {
      */
     function getNav($id)
     {
-        $auth = model('Menu')->find($id);
-        $getParams = request()->param();
 
+        $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
+        $redis = redis(1);
+        //判断该权限是否存在
+        if($redis->exists(config('admin.session_admin_auth_check_nav') . $adminId . $id)){
+            $auth =json_decode($redis->get(config('admin.session_admin_auth_check_nav')  . $adminId. $id),true);
+        }else{
+            $model =  new \app\admin\model\Menu();
+            $auth = $model->find($id);
+            $redis->set(config('admin.session_admin_auth_check_nav') . $adminId . $id,json_encode($auth), config('admin.redis_expire'));
+        }
+
+        $getParams = request()->param();
         if ($auth['level'] === 2) {
+
             if ($auth['module'] === strtolower(request()->module())
                 && $auth['controller'] === strtolower(request()->controller())
                 && $auth['action'] === strtolower(request()->action())) {
@@ -172,156 +153,36 @@ if (!function_exists('getNav')) {
                 }
                 return 'current-page';
             }
-        }
 
-        if ($auth['level'] === 2) {
+            //level = 3
             $where = [
                 'module' => strtolower(request()->module()),
                 'controller' => strtolower(request()->controller()),
                 'action' => strtolower(request()->action()),
                 'parent_id' => $id
             ];
-            $_auth = model('Menu')->where($where)->select()->toArray();
-            $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
-            if (count($_auth) == 1) {
-                $GroupMenu = session(config('admin.session_admin_auth') . $adminId, '', config('admin.session_admin_scope'));
 
+            //判断该权限是否存在
+            if($redis->exists(config('admin.session_admin_auth_check_nav') . $adminId . http_build_query($where))){
+                $_auth =json_decode($redis->get(config('admin.session_admin_auth_check_nav')  . $adminId. http_build_query($where)),true);
+            }else{
+                $model =  new \app\admin\model\Menu();
+                $_auth = $model->where($where)->select()->toArray();
+                $redis->set(config('admin.session_admin_auth_check_nav') . $adminId . http_build_query($where),json_encode($auth), config('admin.redis_expire'));
+            }
+
+            if (count($_auth) == 1) {
+                $GroupMenu = json_decode($redis->get(config('admin.session_admin_auth') . $adminId),true);
                 if (in_array($_auth[0]['id'], $GroupMenu)) {
                     return 'current-page';
                 }
             }
+
         }
         return '';
     }
 }
 
-if (!function_exists('commonAuth')) {
-    /**
-     * @Title: commonAuth
-     * @Description: todo()
-     * @Author: liu tao
-     * @param $auth
-     * @param $GroupMenu
-     * @param int $status
-     * @return bool
-     */
-    function commonAuth($auth, $GroupMenu, $status = 1)
-    {
-        $flag = true;
-        $getParams = request()->param();
-        foreach ($auth as $key => $val) {
-            if (empty($val['params'])) {
-                break;
-            }
-
-            $params = array_filter(explode('&', $val['params']));
-            foreach ($params as $v) {
-                $param = array_filter(explode('=', $v));
-
-                if ($status === 1) {
-                    $str = isset($param[0]) && isset($param[1]) && isset($getParams[$param[0]]) && $getParams[$param[0]] == $param[1] && in_array($val['id'], $GroupMenu);
-                }
-
-                if ($status === 2) {
-                    $str = isset($param[0]) && isset($param[1]) && isset($getParams[$param[0]]) && $getParams[$param[0]] == $param[1] && $GroupMenu == $val['parent_id'];
-                }
-
-                if ($str) {
-                    $flag = false;
-                    break;
-                }
-            }
-        }
-
-        return $flag;
-    }
-}
-
-if (!function_exists('insertToDb')) {
-    /**
-     * @Title: insertToDb
-     * @Description: todo(excel 导入数据库)
-     * @Author: liu tao
-     * @param $fields
-     * @param $gp_id
-     * @param $admin_id
-     * @return array
-     */
-    function insertToDb($fields, $Model, $table)
-    {
-        $file = request()->file('file');
-        //移到/public/uploads/excel/下
-        $path = '/public/uploads/excel';
-        try {
-            if (!$file) {
-                exception(lang('request_illegal'));
-            }
-            $info = $file->validate(['size' => 1024 * 1024 * 10, 'ext' => 'xlsx,xls'])->move(\Env::get('root_path') . $path);
-        } catch (\Exception $e) {
-            return ['status' => -1, 'message' => $e->getMessage()];
-        }
-        if ($info) {
-            //获取上传后的文件名
-            $fileName = $info->getSaveName();
-            //文件路径
-            $filePath = $path . '/' . $fileName;
-            //获取后缀
-            $extension = $info->getExtension();
-            //实例化PHPExcel类
-            //读取excel文件
-            if ($extension == 'xlsx') {
-                $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-                $objPHPReader = $objReader->load(\Env::get('root_path') . $filePath, $encode = 'utf-8');
-            } else if ($extension == 'xls') {
-                $objReader = \PHPExcel_IOFactory::createReader('Excel5');
-                $objPHPReader = $objReader->load(\Env::get('root_path') . $filePath, $encode = 'utf-8');
-            }
-
-            //读取excel文件中的第一个工作表
-            $sheet = $objPHPReader->getSheet(0);
-            $allRow = $sheet->getHighestRow();  //取得总行数
-            $allColumn = $sheet->getHighestColumn();  //取得总列数
-
-            $insert = [];
-            $now = time();
-            $flag = true;
-            //从第一行开始读取数据
-            for ($j = 2; $j <= $allRow; $j++) {
-                //从A列读取数据
-                $i = 0;
-                for ($k = 'A'; $k <= $allColumn; $k++) {
-                    $val = $objPHPReader->getActiveSheet()->getCell("$k$j")->getValue();
-                    $data[$fields[$i]] = $val ? $val : '';
-
-                    //年级
-                    if ($fields[$i] == 'grade') {
-                        $data['grade_id'] = model('grade')->where('name', '=', $val)->value('id');
-                    }
-
-                    //标签
-                    if ($fields[$i] == 'tag') {
-                        $data['tag_id'] = model('tag')->where('name', '=', $val)->value('id');
-                    }
-
-                    $i++;
-                }
-                if ($flag) {
-                    $insert[] = $data;
-                }
-                $flag = true;
-            }
-            if (empty($insert)) {
-                return ['status' => -1, 'message' => '导入数据为空'];
-            }
-            collection($insert)->chunk(2000)->each(function ($item) use ($Model) {
-                $Model->isUpdate(false)->allowField(true)->saveAll($item);
-            });
-            return ['status' => 1, 'message' => "共导入成功：" . count($insert) . "条数据"];
-        } else {
-            return ['status' => -1, 'message' => '写入数据库失败'];
-        }
-    }
-}
 
 
 if (!function_exists('yesOrNo')) {

@@ -11,8 +11,8 @@ namespace app\admin\model;
 
 class Group extends Base
 {
-
-    protected $pk = 'id';
+    // 表名
+    protected $table = 'group';
 
     public function adminGroup()
     {

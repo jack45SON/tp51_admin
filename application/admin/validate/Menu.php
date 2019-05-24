@@ -19,7 +19,6 @@ class Menu extends Validate
 
     protected $message = [
         'name.require'        => '{%name_require}',
-        'name.unique'         => '{%name_unique}',
         'module.require'      => '{%module_require}',
     ];
 

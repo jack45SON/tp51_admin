@@ -32,7 +32,7 @@ class Admin extends Validate
 
     protected $scene = [
         'add'       => ['name', 'password', 'res_password'],
-        'edit'      => ['id']
+        'edit'      => ['id','name']
     ];
 
     public function sceneLogin()

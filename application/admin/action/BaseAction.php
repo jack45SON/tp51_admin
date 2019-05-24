@@ -3,7 +3,6 @@
 namespace app\admin\action;
 
 use think\Exception;
-use think\exception\PDOException;
 
 class BaseAction
 {
@@ -31,16 +30,18 @@ class BaseAction
      * @param bool $flag
      * @return array
      */
-    public function addOrEdit($data,$scene = 'add',$flag = false){
+    public function addOrEdit($data, $scene = 'add', $flag = false, $alone){
 
         //单独设置修改时
         if(isset($data['field'])&&$data['field']){
             $data[$data['field']]=$data['value'];
         }
-        
-        if (!$this->validate->scene($scene)->check($data)) {
-            $this->result['message'] = $this->validate->getError();
-            return $this->result;
+
+        if(!$alone){
+            if (!$this->validate->scene($scene)->check($data)) {
+                $this->result['message'] = $this->validate->getError();
+                return $this->result;
+            }
         }
 
         //操作数据
@@ -90,8 +91,6 @@ class BaseAction
                 $this->result['message'] =lang('No rows were deleted');
             }
         } catch (Exception $e) {
-            $this->result['message'] = $e->getMessage();
-        }catch (PDOException $e) {
             $this->result['message'] = $e->getMessage();
         }
         return $this->result;

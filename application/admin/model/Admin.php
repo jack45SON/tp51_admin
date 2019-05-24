@@ -3,8 +3,8 @@ namespace app\admin\model;
 
 class Admin extends Base
 {
-
-    protected $pk = 'id';
+    // 表名
+    protected $table = 'admin';
 
     public function adminInfo()
     {

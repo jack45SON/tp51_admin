@@ -3,7 +3,7 @@
  * @param Ths
  * @param obj
  */
-function uploadImgOne(Ths,obj) {
+function uploadImgOne(Ths,url,obj) {
     $('body').append('<input type="file" name="file" id="uploadFile" style="display: none;" multiple="multiple"/>');
     $('#uploadFile').click();
     $('#uploadFile').change(function () {
@@ -29,7 +29,7 @@ function uploadImgOne(Ths,obj) {
                 }
             }
             $('#uploadFile').remove();
-        },obj);
+        },obj,url);
     });
 }
 
@@ -96,7 +96,7 @@ function uploadImgCheckedPx(f, callback, obj) {
  * @param inputArray
  * @param callback
  */
-function uploadImgBackAjax(inputArray, callback) {
+function uploadImgBackAjax(inputArray, callback, url) {
     var formData = new FormData();
     if(inputArray.length >1) {
         for (var i = 0; i < inputArray.length; i++) {
@@ -107,7 +107,7 @@ function uploadImgBackAjax(inputArray, callback) {
     }
     $.ajax({
         type: 'POST',
-        url: '/attach/Upload/image',
+        url: url,
         dataType: 'json',
         data: formData,
         cache: false,
@@ -134,7 +134,7 @@ function uploadImgBackAjax(inputArray, callback) {
  * @param callback
  * @param obj
  */
-function uploadImgF(inputArray, callback, obj) {
+function uploadImgF(inputArray, callback, obj, url) {
     if (is_json(obj)) {
         var resStateArray = [];
         for (var i = 0; i < inputArray.length; i++) {
@@ -151,13 +151,13 @@ function uploadImgF(inputArray, callback, obj) {
                 } else {
                     uploadImgBackAjax(inputArray, function (res) {
                         callback && callback(res);
-                    });
+                    },url);
                 }
             }
         }, 500);
     } else {
         uploadImgBackAjax(inputArray, function (res) {
             callback && callback(res);
-        });
+        },url);
     }
 }

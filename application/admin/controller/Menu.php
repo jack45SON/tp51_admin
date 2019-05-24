@@ -113,11 +113,13 @@ class Menu extends Base
             $data = input('post.');
             $is_update = true;
             $scene = 'add';
+            $alone = false;
             if (isset($data['id']) && $data['id'] > 0) {
                 //单独设置修改时
                 if(isset($data['field'])&&$data['field']){
                     $data[$data['field']]=$data['value'];
                     $scene = 'edit';
+                    $alone = true;
                 }else{
                     $children = $this->getChild($data['id']);
                     if(in_array($data['parent_id'],$children) || $data['parent_id']==$data['id']){
@@ -130,11 +132,14 @@ class Menu extends Base
             }
 
             //当方法名存在的时候，判断url地址是否已存在
-            if(isset($data['action']) && $data['action'] && isset($data['params']) && $data['params']) {
+            if(isset($data['action']) && $data['action']) {
                 $where[] = ['module', 'eq', $data['module']];
                 $where[] = ['controller', 'eq', $data['controller']];
                 $where[] = ['action', 'eq', $data['action']];
-                $where[] = ['params', 'eq', $data['params']];
+                if(isset($data['params']) && $data['params']){
+                    $where[] = ['params', 'eq', $data['params']];
+                }
+
                 $count = $this->model->where($where)->count();
                 if ($count) {
                     return show(-1, lang('controller_action_unique'));
@@ -142,9 +147,9 @@ class Menu extends Base
             }
 
             if($is_update){
-                $result = $this->service->edit($data,$scene);
+                $result = $this->service->edit($data,$scene,$alone);
             }else{
-                $result = $this->service->add($data,$scene);
+                $result = $this->service->add($data,$scene,$alone);
             }
             if ($result['status'] > 0) {
                 session(config('admin.session_admin_auth') . $this->adminId,null,config('admin.session_admin_scope'));

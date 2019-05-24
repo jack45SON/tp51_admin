@@ -6,7 +6,7 @@
                 <div class="x_content">
                     <br/>
                     <form class="form-horizontal" method="post" action=""
-                          onsubmit="return AddEditFrom(this,'/admin/admin/detail',true)">
+                          onsubmit="return AddEditFrom(this,'/{:MODULE_NAME}/{:CONTROLLER_NAME}/detail',true)">
                         <input type="hidden" class="form-control" value="{$data.id}" name="id"/>
                         <input type="hidden" class="form-control" value="{$id}" name="admin_id"/>
                         <div class="form-group">
@@ -60,7 +60,7 @@
                             <div class="col-md-9 col-sm-9 col-xs-9">
                                 {if condition="$data.avatar"}
                                 <input type="text" class="form-control" value="{$data.avatar}" name="avatar" readonly
-                                       onclick="uploadImgOne(this);" placeholder="选择图片" required data-msg="{$Think.lang.avatar}"/>
+                                       onclick="uploadImgOne(this,'/{:MODULE_NAME}/upload/image');" placeholder="选择图片" required data-msg="{$Think.lang.avatar}"/>
                                 <input type="hidden" class="form-control attach_id" value="{$data.attach_id}" name="attach_id" />
                                 <span class="fa fa-folder form-control-feedback right" aria-hidden="true"></span>
                                 <p class="m-top-sm" style="margin-top: 10px;">
@@ -68,7 +68,7 @@
                                 </p>
                                 {else /}
                                 <input type="text" class="form-control" value="{$data.avatar}" name="avatar" readonly
-                                       onclick="uploadImgOne(this);" placeholder="选择图片"/>
+                                       onclick="uploadImgOne(this,'/{:MODULE_NAME}/upload/image');" placeholder="选择图片"/>
                                 <input type="hidden" class="form-control attach_id" value="{$data.attach_id}" name="attach_id"/>
                                 <span class="fa fa-folder form-control-feedback right" aria-hidden="true"></span>
                                 {/if}

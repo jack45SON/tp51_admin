@@ -13,5 +13,7 @@
 // | 应用设置
 // +----------------------------------------------------------------------
 return [
-    'exception_handle'       => 'app\common\lib\exception\ApiHandleException',
+    'exception_handle'          => 'app\common\lib\exception\ApiHandleException',
+    'static'                    =>'/static/admin',
+
 ];

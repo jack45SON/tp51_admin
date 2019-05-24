@@ -36,8 +36,8 @@
                                     <th class="column-title">参数</th>
                                     <th class="column-title">状态</th>
                                     <th class="column-title">是否显示</th>
-                                    <th class="column-title">创建时间</th>
-                                    <th class="column-title">修改时间</th>
+                                    <!--<th class="column-title">创建时间</th>-->
+                                    <!--<th class="column-title">修改时间</th>-->
                                     <th class="column-title">操作管理</th>
                                 </tr>
 
@@ -59,8 +59,8 @@
                                     <td>
                                         {:yesOrNo('is_show',$vo.is_show,$vo.id)}
                                     </td>
-                                    <td>{$vo.create_time}</td>
-                                    <td>{$vo.update_time}</td>
+                                    <!--<td>{$vo.create_time}</td>-->
+                                    <!--<td>{$vo.update_time}</td>-->
                                     <td>
                                         <p class="url">
                                             {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改菜单','edit',true,$vo.id)}

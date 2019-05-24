@@ -10,9 +10,16 @@ return [
     'layout_url'                =>'/admin/login/layout',
 
     //session
-    'session_admin_user'        => 'adminUser',
-    'session_admin_id'          => 'adminId',
-    'session_admin_menu'        => 'adminMenu',
-    'session_admin_auth'        => 'adminAuth',
-    'session_admin_scope'       => 'admin',
+    'session_admin_scope'               => 'admin',
+    'session_admin_user'                => 'adminUser',
+    'session_admin_id'                  => 'adminId',
+
+
+    'session_admin_menu'                => 'adminMenu',
+    'session_admin_auth'                => 'adminAuth',
+    'session_admin_auth_check'          => 'adminAuthCheck',
+    'session_admin_auth_check_navP'     => 'adminAuthCheckNavP',
+    'session_admin_auth_check_nav'      => 'adminAuthCheckNav',
+
+    'redis_expire'                      =>  10*86500,
 ];

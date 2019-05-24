@@ -33,7 +33,8 @@ trait Backend
     public function add(){
        
         if (request()->isAjax() && request()->isPost()) {
-            return $this->service->create();
+            $data = request()->param();
+            return $this->service->add($data);
         }
         return $this->fetch('');
     }
@@ -48,7 +49,8 @@ trait Backend
     public function edit()
     {
         if (request()->isAjax() && request()->isPost()) {
-            return $this->service->edit();
+            $data = request()->param();
+            return $this->service->edit($data);
         }
 
         $id = request()->param('id');

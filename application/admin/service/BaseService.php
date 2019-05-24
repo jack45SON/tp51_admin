@@ -27,8 +27,9 @@ class BaseService
      * @Time: 2019/3/22 下午6:34
      * @return array
      */
-    public function add($data,$scene = 'add'){
-        return $this->action->addOrEdit($data,$scene);
+    public function add($data, $scene = 'add', $alone  = false)
+    {
+        return $this->action->addOrEdit($data, $scene, false, $alone);
     }
 
     /**
@@ -38,8 +39,9 @@ class BaseService
      * @Time: 2019/3/22 下午6:34
      * @return array
      */
-    public function edit($data,$scene = 'edit'){
-        return $this->action->addOrEdit($data,$scene,true);
+    public function edit($data, $scene = 'edit', $alone)
+    {
+        return $this->action->addOrEdit($data, $scene, true, $alone);
     }
 
     /**
@@ -49,7 +51,8 @@ class BaseService
      * @Time: 2019/3/22 下午6:34
      * @return mixed
      */
-    public function getDetail($data){
+    public function getDetail($data)
+    {
         return $this->repository->getDetail($data);
     }
 
@@ -60,7 +63,8 @@ class BaseService
      * @Time: xxx
      * @return \think\response\Json
      */
-    public function allSet($data){
+    public function allSet($data)
+    {
         return $this->action->allSet($data);
     }
 }

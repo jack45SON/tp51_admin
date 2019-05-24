@@ -4,7 +4,6 @@ namespace app\admin\model;
 
 class AdminInfo extends Base
 {
-
-    protected $pk='id';
-
+    // 表名
+    protected $table = 'admin_info';
 }

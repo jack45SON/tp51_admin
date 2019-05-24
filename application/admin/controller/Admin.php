@@ -91,6 +91,11 @@ class Admin extends Base
             }
 
             if ($id) {
+                if($id == $this->adminId){
+                    $admin = $this->model->with('adminInfo')->find($this->adminId);
+                    session(config('admin.session_admin_id'), $admin['id'],config('admin.session_admin_scope'));
+                    session(config('admin.session_admin_user'), $admin,config('admin.session_admin_scope'));
+                }
                 return show(1, lang('action_success'));
             } else {
                 return show(-1, lang('action_fail'));
@@ -137,7 +142,7 @@ class Admin extends Base
                 if (isset($data['password']) && $data['password']) {
                     $data['encrypt']       = createRandomStr();
                     $data['password']      = IAuth::setPassword($data['password'],$data['encrypt']);
-                    $data['res_password']     = IAuth::setPassword($data['res_password'],$data['encrypt']);
+                    $data['res_password']  = IAuth::setPassword($data['res_password'],$data['encrypt']);
                 } else {
                     $scene = 'edit';
                     unset($data['password']);
@@ -154,9 +159,9 @@ class Admin extends Base
 
             Db::startTrans();
             if($is_update){
-                $result = $this->service->edit($data,$scene);
+                $result = $this->service->edit($data,$scene,$alone);
             }else{
-                $result = $this->service->add($data,$scene);
+                $result = $this->service->add($data,$scene,$alone);
             }
             //添加或者编辑成功进行管理员分组处理
             if ($result['status'] > 0) {

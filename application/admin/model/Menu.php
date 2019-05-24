@@ -12,8 +12,8 @@ namespace app\admin\model;
 class Menu extends Base
 {
 
-    protected $pk = 'id';
-
+    // 表名
+    protected $table = 'menu';
     public function getMenusByCondition($condition)
     {
         $result = $this->where($condition)

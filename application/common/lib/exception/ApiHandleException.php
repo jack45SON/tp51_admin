@@ -16,6 +16,6 @@ class ApiHandleException extends Handle
             $this->httpCode = $e->httpCode;
             $this->code     = $e->code;
         }
-      return  show($this->code,$e->getMessage(),[],$this->httpCode);
+      return  showApi($this->code,$e->getMessage(),[],$this->httpCode);
     }
 }

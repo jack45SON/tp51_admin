@@ -3,7 +3,6 @@
 namespace app\common\action;
 
 use think\Exception;
-use think\exception\PDOException;
 
 class BaseAction
 {
@@ -53,8 +52,6 @@ class BaseAction
             }
         } catch (Exception $e) {
             $this->result['message'] = $e->getMessage();
-        } catch (PDOException $e) {
-            $this->result['message'] = $e->getMessage();
         }
         return show($this->result['status'],$this->result['message'],$this->result['data']);
     }
@@ -83,8 +80,6 @@ class BaseAction
             }
         } catch (Exception $e) {
             $this->result['message'] = $e->getMessage();
-        }catch (PDOException $e) {
-            $this->result['message'] = $e->getMessage();
         }
         return show($this->result['status'],$this->result['message'],$this->result['data']);
     }
@@ -109,8 +104,6 @@ class BaseAction
                 $this->result['message'] =lang('action_fail');
             }
         } catch (Exception $e) {
-            $this->result['message'] = $e->getMessage();
-        }catch (PDOException $e) {
             $this->result['message'] = $e->getMessage();
         }
         return show($this->result['status'],$this->result['message'],$this->result['data']);
