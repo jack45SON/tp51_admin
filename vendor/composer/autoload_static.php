@@ -15,11 +15,13 @@ class ComposerStaticInit075c962ccc2e9dfe974d7b4ac6d5d84c
         'ddc3cd2a04224f9638c5d0de6a69c7e3' => __DIR__ . '/..' . '/topthink/think-migration/src/config.php',
         'cc56288302d9df745d97c934d6a6e5f0' => __DIR__ . '/..' . '/topthink/think-queue/src/common.php',
         '72c97b53391125cae04082a81029f42d' => __DIR__ . '/..' . '/topthink/think-testing/src/config.php',
+        'ffc1d7141d4fcbaeb47a6929f0811ed1' => __DIR__ . '/..' . '/topthink/think-worker/src/command.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         't' => 
         array (
+            'think\\worker\\' => 13,
             'think\\testing\\' => 14,
             'think\\migration\\' => 16,
             'think\\helper\\' => 13,
@@ -37,6 +39,7 @@ class ComposerStaticInit075c962ccc2e9dfe974d7b4ac6d5d84c
         ),
         'W' => 
         array (
+            'Workerman\\' => 10,
             'Webmozart\\Assert\\' => 17,
         ),
         'S' => 
@@ -48,6 +51,11 @@ class ComposerStaticInit075c962ccc2e9dfe974d7b4ac6d5d84c
         'P' => 
         array (
             'Phinx\\' => 6,
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
+        'G' => 
+        array (
+            'GatewayWorker\\' => 14,
         ),
         'F' => 
         array (
@@ -61,6 +69,10 @@ class ComposerStaticInit075c962ccc2e9dfe974d7b4ac6d5d84c
     );
 
     public static $prefixDirsPsr4 = array (
+        'think\\worker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-worker/src',
+        ),
         'think\\testing\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-testing/src',
@@ -96,6 +108,11 @@ class ComposerStaticInit075c962ccc2e9dfe974d7b4ac6d5d84c
         array (
             0 => __DIR__ . '/../..' . '/application',
         ),
+        'Workerman\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/workerman',
+            1 => __DIR__ . '/..' . '/workerman/workerman-for-win',
+        ),
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
@@ -115,6 +132,15 @@ class ComposerStaticInit075c962ccc2e9dfe974d7b4ac6d5d84c
         'Phinx\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-migration/phinx/src/Phinx',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'GatewayWorker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/gateway-worker/src',
+            1 => __DIR__ . '/..' . '/workerman/gateway-worker-for-win/src',
         ),
         'Faker\\' => 
         array (

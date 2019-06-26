@@ -30,13 +30,13 @@ class BaseAction
      * @param bool $flag
      * @return array
      */
-    public function addOrEdit($data, $scene = 'add', $flag = false, $alone){
+    public function addOrEdit($data, $scene = 'add', $flag = false){
 
         //单独设置修改时
         if(isset($data['field'])&&$data['field']){
             $data[$data['field']]=$data['value'];
         }
-
+        $alone = $data['alone'] ?? 0;
         if(!$alone){
             if (!$this->validate->scene($scene)->check($data)) {
                 $this->result['message'] = $this->validate->getError();

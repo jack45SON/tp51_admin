@@ -27,9 +27,9 @@ class BaseService
      * @Time: 2019/3/22 下午6:34
      * @return array
      */
-    public function add($data, $scene = 'add', $alone  = false)
+    public function add($data, $scene = 'add')
     {
-        return $this->action->addOrEdit($data, $scene, false, $alone);
+        return $this->action->addOrEdit($data, $scene, false);
     }
 
     /**
@@ -39,9 +39,9 @@ class BaseService
      * @Time: 2019/3/22 下午6:34
      * @return array
      */
-    public function edit($data, $scene = 'edit', $alone)
+    public function edit($data, $scene = 'edit')
     {
-        return $this->action->addOrEdit($data, $scene, true, $alone);
+        return $this->action->addOrEdit($data, $scene, true);
     }
 
     /**

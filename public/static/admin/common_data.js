@@ -101,7 +101,8 @@ function editor_radio(_ths, url) {
         data: {
             'id': id,
             'field': field,
-            'value': _value
+            'value': _value,
+            'alone': 1
         },
         success: function (ret) {
             layer.closeAll();
@@ -136,7 +137,8 @@ function editor_field(_ths, url) {
                 data: {
                     'id': id,
                     'field': field,
-                    'value': pass
+                    'value': pass,
+                    'alone': 1
                 },
                 success: function (ret) {
                     layer.closeAll();
