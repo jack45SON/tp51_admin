@@ -17,7 +17,7 @@
                             </li>
                             <!--<li><a onclick="deleteData('deleteType');">删除</a>-->
                             <li>
-                                {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/add', '添加菜单','add',true,'',700)}
+                                {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/create', '添加菜单','create',true,'',750)}
                             </li>
                         </ul>
                         <div class="clearfix"></div>
@@ -63,7 +63,7 @@
                                     <!--<td>{$vo.update_time}</td>-->
                                     <td>
                                         <p class="url">
-                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改菜单','edit',true,$vo.id)}
+                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改菜单','edit',true,$vo.id,750)}
                                         </p>
                                     </td>
                                 </tr>

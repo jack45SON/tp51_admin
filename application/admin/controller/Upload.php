@@ -28,7 +28,6 @@ class Upload extends Controller
         $img = $Model->where(['md5' => $md5, 'sha1' => $sha1])->find();
 
         if ($img) {
-            $data['thumb'] = $this->thumb($img['path'], array(array(100, 100), array(800, 800), array(80, 80)));
             return [
                 'status'    => 1,
                 'message'   => lang('upload_success'),
@@ -45,12 +44,7 @@ class Upload extends Controller
             } catch (\Exception $e) {
                 return ['status' => -1, 'message' => $e->getMessage()];
             }
-
-
             $path = DS . 'uploads' . DS . 'img' . DS . $path . DS . $info->getSaveName();
-
-           $data['thumb'] = $this->thumb($path, array(array(100, 100), array(800, 800), array(80, 80)));
-
             $data = [
                 'domain_name'   => request()->root(true),
                 'path'          => $path,
@@ -77,6 +71,22 @@ class Upload extends Controller
             }
         }
     }
+
+    public function uploadBase64(){
+        if(request()->isPost() && request()->isAjax()){
+            $param = input('post.');
+            preg_match('/^(data:\s*image\/(\w+);base64,)/', $param['base64'], $result);
+            $type = $result[2];
+            // 移动到框架应用根目录下
+            $path =  'uploads' . DS . 'img' . DS . 'feedback'.DS.time().'.'.$type;
+            $imgPath = DS . $path;
+            //  创建将数据流文件写入我们创建的文件内容中
+            file_put_contents($path, base64_decode(str_replace($result[1], '', $param['base64'])));
+
+            return $imgPath;
+        }
+    }
+
 
     public function thumb($imgUrl, $thumb_array = array(array(100, 100)))
     {
@@ -116,21 +126,5 @@ class Upload extends Controller
             }
 
         }
-    }
-
-    public function uploadBase64(){
-        if(request()->isPost() && request()->isAjax()){
-            $param = input('post.');
-            preg_match('/^(data:\s*image\/(\w+);base64,)/', $param['base64'], $result);
-            $type = $result[2];
-            // 移动到框架应用根目录下
-            $path =  'uploads' . DS . 'img' . DS . 'feedback'.DS.time().'.'.$type;
-            $imgPath = DS . $path;
-            //  创建将数据流文件写入我们创建的文件内容中
-            file_put_contents($path, base64_decode(str_replace($result[1], '', $param['base64'])));
-
-            return $imgPath;
-        }
-
     }
 }

@@ -7,7 +7,6 @@ return [
     'old_password'                  => '旧密码',
     'res_password'                  => '确认密码',
     'captcha'                       => '验证码',
-
     'group'                         => '管理组',
 
     //用户信息表
@@ -32,6 +31,14 @@ return [
     'res_password_confirm'      => '两次密码输入不一致',
     'captcha_require'           => '验证码不能为空',
     'captcha_error'             => '验证码错误',
+    'nickname_max'              => '昵称长度不能超过64个字符',
+    'nickname_unique'           => '昵称已重复',
+    'mobile_max'                => '手机号码长度不能超过16个字符',
+    'mobile_mobile'             => '手机号码有误',
+    'email_max'                 => '邮箱长度不能超过32个字符',
+    'email_email'               => '邮箱格式错误',
+
+
     'supper_stop'               => 'Admin管理员禁止禁用',
 
     'admin_no_exist'            =>'管理员不存在',

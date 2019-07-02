@@ -51,9 +51,9 @@ class BaseService
      * @Time: 2019/3/22 下午6:34
      * @return mixed
      */
-    public function getDetail($data)
+    public function getDetail($id)
     {
-        return $this->repository->getDetail($data);
+        return $this->repository->getDetail($id);
     }
 
     /**

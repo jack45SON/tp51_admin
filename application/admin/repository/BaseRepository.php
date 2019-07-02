@@ -11,8 +11,7 @@ class BaseRepository
         $this->model = $model;
     }
 
-    public function getDetail($data){
-        $id = $data['id'];
+    public function getDetail($id){
         $result = $this->model->find($id);
         return $result;
     }

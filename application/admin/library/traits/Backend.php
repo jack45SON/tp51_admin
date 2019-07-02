@@ -30,7 +30,7 @@ trait Backend
      * @Time: xxx
      * @return mixed|\think\response\Json
      */
-    public function add(){
+    public function create(){
        
         if (request()->isAjax() && request()->isPost()) {
             $data = request()->param();

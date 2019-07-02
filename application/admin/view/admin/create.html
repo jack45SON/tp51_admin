@@ -4,58 +4,53 @@
             <div class="x_panel">
                 <div class="x_content">
                     <br/>
-                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit',true);">
-                        <input type="hidden" name="id" value="{$data.id}">
+                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/{:MODULE_NAME}/{:CONTROLLER_NAME}/create',true);">
                         <div class="item form-group">
                             <label class="control-label col-md-3" for="name">{$Think.lang.name}<span
                                     class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="name" class="form-control col-md-7 col-xs-12" name="name" value="{$data.name}" type="text">
+                                <input id="name" class="form-control col-md-7 col-xs-12" name="name" required="required" type="text">
                                 <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+
                             </div>
                         </div>
                         <div class="item form-group">
-                            <label for="password" class="control-label col-md-3">{$Think.lang.password}</label>
+                            <label for="password" class="control-label col-md-3">{$Think.lang.password}<span
+                                    class="required">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="password" type="password" name="password"
-                                       class="form-control col-md-7 col-xs-12">
+                                <input id="password" type="password" name="password" class="form-control col-md-7 col-xs-12" required>
                                 <span class="fa fa-check form-control-feedback right" aria-hidden="true"></span>
                             </div>
                         </div>
                         <div class="item form-group">
                             <label for="res_password"
-                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.res_password}</label>
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.res_password}<span
+                                    class="required">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="res_password" type="password" name="res_password"
-                                       class="form-control col-md-7 col-xs-12">
+                                <input id="res_password" type="password" name="res_password" class="form-control col-md-7 col-xs-12" required>
                                 <span class="fa fa-check-square-o form-control-feedback right" aria-hidden="true"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.nickname}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" class="form-control" name="nickname" value="{$data.nickname}"  placeholder="昵称"/>
+                                <input type="text" class="form-control" name="nickname" value=""  placeholder="昵称"/>
                                 <span class="fa fa-credit-card form-control-feedback right" aria-hidden="true"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.avatar}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" class="form-control" value="{$data.avatar}" name="avatar" readonly onclick="uploadImgOne(this,'/{:MODULE_NAME}/upload/image');" placeholder="选择图片"/>
+                                <input type="text" class="form-control" value="" name="avatar" readonly onclick="uploadImgOne(this,'/{:MODULE_NAME}/upload/image');" placeholder="选择图片"/>
                                 <span class="fa fa-file-image-o form-control-feedback right" aria-hidden="true"></span>
-                                {if condition="$data.avatar"}
-                                <p class="m-top-sm" style="margin-top: 10px;">
-                                    <img src="{$data.avatar}" width="120"/>
-                                </p>
-                                {/if}
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.mobile}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input type="number" class="form-control" id="mobile"
-                                       value="{$data.mobile}" name="mobile" placeholder="{$Think.lang.mobile}">
+                                       value="" name="mobile" placeholder="{$Think.lang.mobile}">
 
                                 <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
                             </div>
@@ -64,7 +59,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-3">{$Think.lang.email}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input type="text" class="form-control" id="email"
-                                       value="{$data.email}" name="email" placeholder="{$Think.lang.email}">
+                                       value="" name="email" placeholder="{$Think.lang.email}">
                                 <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                             </div>
                         </div>
@@ -72,38 +67,23 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.sex}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div id="sex" class="btn-group" data-toggle="buttons">
-                                    <label class='btn btn-default {eq name="$data.sex" value="0" } active {/eq}'>
-                                        <input type="radio" name="sex" value="0" {eq name="$data.sex" value="0" }checked{/eq}> &nbsp; {$Think.lang.sex0} &nbsp;
+                                    <label class='btn btn-default active' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="sex" value="0" checked> &nbsp; {$Think.lang.sex0} &nbsp;
                                     </label>
-                                    <label class='btn btn-default {eq name="$data.sex" value="1" } active {/eq}'>
-                                        <input type="radio" name="sex" value="1" {eq name="$data.sex" value="1"}checked{/eq}> {$Think.lang.sex1}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.status}</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <div id="status" class="btn-group" data-toggle="buttons">
-                                    <label class='btn btn-default {eq name="$data.status" value="0" } active {/eq}'>
-                                        <input type="radio" name="status" value="0" {eq name="$data.status" value="0" }checked{/eq}> &nbsp; {$Think.lang.status0} &nbsp;
-                                    </label>
-                                    <label class='btn btn-default {eq name="$data.status" value="1" } active {/eq}'>
-                                        <input type="radio" name="status" value="1" {eq name="$data.status" value="1"}checked{/eq}> {$Think.lang.status1}
+                                    <label class='btn btn-default' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                        <input type="radio" name="sex" value="1" > {$Think.lang.sex1}
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="item form-group">
-                            <label for="group_ids" class="control-label col-md-3">{$Think.lang.group}</label>
+                            <label for="group_ids" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.group}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select id="group_ids" class="chosen-select chosen-select-width form-control" name="group_ids[]" required  multiple="multiple">
+                                <select id="group_ids" class="chosen-select chosen-select-width form-control col-md-7 col-xs-12" name="group_ids[]"  multiple="multiple">
                                     {foreach $group as $vo}
-                                    {if condition="in_array($vo.id,$adminGroup)"}
-                                    <option value="{$vo.id}" data-id="{$vo.id}" selected>{$vo.name}</option>
-                                    {else/}
-                                    <option value="{$vo.id}" data-id="{$vo.id}" >{$vo.name}</option>
-                                    {/if}
+                                    <option value="{$vo.id}" data-id="{$vo.id}">
+                                        {$vo.name}
+                                    </option>
                                     {/foreach}
                                 </select>
                                 <span class="fa fa-users form-control-feedback right" aria-hidden="true"></span>

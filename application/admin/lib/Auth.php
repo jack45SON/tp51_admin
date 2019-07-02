@@ -171,7 +171,7 @@ class Auth
         if(self::$redis->exists(config('admin.session_admin_auth_check_navP') . self::$adminId . http_build_query($where))){
             $auth =json_decode(self::$redis->get(config('admin.session_admin_auth_check_navP')  . self::$adminId. http_build_query($where)),true);
         }else{
-            $model =  new \app\admin\model\Menu();
+            $model =  new Menu();
             $auth =$model->where($where)->select()->toArray();
             self::$redis->set(config('admin.session_admin_auth_check_navP') . self::$adminId . http_build_query($where),json_encode($auth), config('admin.redis_expire'));
         }
@@ -186,7 +186,8 @@ class Auth
 
         if (count($auth) > 0) {
             if ($auth[0]['level'] == 3) {
-                $menu = model('Menu')->field('parent_id')->find($auth[0]['parent_id']);
+                $model =  new Menu();
+                $menu = $model->field('parent_id')->find($auth[0]['parent_id']);
                 if ($parent_id == $menu->parent_id) {
                     return 'active';
                 }

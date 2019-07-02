@@ -14,6 +14,9 @@ class Admin extends Validate
 {
     protected $rule=[
         'name'              =>'require|max:50|unique:admin',
+        'nickname'          =>'max:64|unique:admin',
+        'mobile'            =>'max:16|mobile',
+        'email'             =>'max:32|email',
         'password'          =>'require',
         'res_password'      =>'require|confirm:password',
         'captcha'           =>'require|captcha',
@@ -28,11 +31,17 @@ class Admin extends Validate
         'res_password.confirm'      => '{%res_password_confirm}',
         'captcha.require'           => '{%captcha_require}',
         'captcha.captcha'           => '{%captcha_error}',
+        'nickname.max'              => '{%nickname_max}',
+        'nickname.unique'           => '{%nickname_unique}',
+        'mobile.max'                => '{%mobile_max}',
+        'mobile.mobile'             => '{%mobile_mobile}',
+        'email.max'                 => '{%email_max}',
+        'email.email'               => '{%email_email}',
     ];
 
     protected $scene = [
-        'add'       => ['name', 'password', 'res_password'],
-        'edit'      => ['id','name']
+        'add'       => ['name', 'password', 'res_password', 'nickname', 'mobile', 'email'],
+        'edit'      => ['id','name', 'nickname', 'mobile', 'email']
     ];
 
     public function sceneLogin()

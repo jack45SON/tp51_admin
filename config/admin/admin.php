@@ -22,4 +22,5 @@ return [
     'session_admin_auth_check_nav'      => 'adminAuthCheckNav',
 
     'redis_expire'                      =>  10*86500,
+    'admin_redis_select'                =>  10,//redis库
 ];

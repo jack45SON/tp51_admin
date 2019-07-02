@@ -16,7 +16,7 @@
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
                             <li>
-                                {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/add', '添加','add')}
+                                {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/create', '添加','create',true,'',700)}
                             </li>
                         </ul>
                         <div class="clearfix"></div>
@@ -48,8 +48,7 @@
                                     <td>{$vo.update_time}</td>
                                     <td>
                                         <p class="url">
-                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id)}
-                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/detail', '详情','detail',true,$vo.id)}
+                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id,700)}
                                         </p>
                                     </td>
                                 </tr>

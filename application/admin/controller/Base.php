@@ -57,27 +57,16 @@ class Base extends Controller
         // 定义应用目录
         define('APP_PATH', \Env::get('root_path') . 'application/');
         //定义模型、控制器、方法
-        define('MODULE_NAME', strtolower(request()->module()));
-        define('CONTROLLER_NAME', strtolower(request()->controller()));
-        define('ACTION_NAME', strtolower(request()->action()));
+        define('MODULE_NAME', request()->module());
+        define('CONTROLLER_NAME', request()->controller());
+        define('ACTION_NAME', request()->action());
 
-        //加载多语言相应控制器对应字段
-        if (isset($_COOKIE['think_var']) && $_COOKIE['think_var']) {
-            $langField = $_COOKIE['think_var'];
-        } else {
-            $langField = config('default_lang');
-        }
-
-        Lang::load(APP_PATH . 'lang/' . $langField . '/' . CONTROLLER_NAME . '.php');
-
-        if (!$this->isLogin()) {
+        $redis = redis(config('admin.admin_redis_select'));
+        if (!$this->isLogin($redis)) {
             $this->redirect('/'.MODULE_NAME.'/login/index');
         }
 
         $menus = [];
-
-        $redis = redis(1);
-
         //如果权限存在则不进行判断
         if ($redis->exists(config('admin.session_admin_auth') . $this->adminId)) {
             if ($redis->exists(config('admin.session_admin_menu') . $this->adminId)) {
@@ -91,8 +80,8 @@ class Base extends Controller
                 if ($auth['flag']) {
                     $menus = $auth['data'];
                 } else {
-                    if (strtolower(CONTROLLER_NAME) == 'index') {
-                        $this->redirect('/'.MODULE_NAME.'/index/index');
+                    if (strtolower(CONTROLLER_NAME) == 'Index') {
+                        $this->redirect('/'.MODULE_NAME.'/Index/index');
                     }
                     if (request()->isAjax() && request()->isPost()) {
                         die(json_encode([
@@ -111,10 +100,13 @@ class Base extends Controller
             }
         }
 
-        //全局变量输出
-        View::share('menus', $menus);
-        View::share('adminUser', $this->adminUser);
-        View::share('select_url', $this->getUrl());
+        if(!request()->isAjax()){
+            //全局变量输出
+            View::share('menus', $menus);
+            View::share('adminUser', $this->adminUser);
+            View::share('select_url', $this->getUrl());
+        }
+
 
         //加载多语言相应控制器对应字段
         if (isset($_COOKIE['think_var']) && $_COOKIE['think_var']) {
@@ -131,13 +123,14 @@ class Base extends Controller
      * @Description: todo(判断登录状态)
      * @Author: liu tao
      */
-    protected function isLogin()
+    protected function isLogin($redis)
     {
         $this->adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
         $this->adminUser = session(config('admin.session_admin_user'), '', config('admin.session_admin_scope'));
-
         if ($this->adminId) {
-            return true;
+            if($redis->exists(config('admin.session_admin_id') . $this->adminId)){
+                return true;
+            }
         }
         return false;
     }

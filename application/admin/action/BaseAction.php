@@ -3,6 +3,7 @@
 namespace app\admin\action;
 
 use think\Exception;
+use think\exception\PDOException;
 
 class BaseAction
 {
@@ -91,6 +92,8 @@ class BaseAction
                 $this->result['message'] =lang('No rows were deleted');
             }
         } catch (Exception $e) {
+            $this->result['message'] = $e->getMessage();
+        } catch (PDOException $e) {
             $this->result['message'] = $e->getMessage();
         }
         return $this->result;

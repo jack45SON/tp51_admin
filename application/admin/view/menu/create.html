@@ -4,21 +4,22 @@
             <div class="x_panel">
                 <div class="x_content">
                     <br/>
-                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit',true);">
-                        <input type="hidden" value="{$data.id}" name="id">
+                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/{:MODULE_NAME}/{:CONTROLLER_NAME}/create',true);">
                         <div class="item form-group">
                             <label class="control-label col-md-3" for="name">{$Think.lang.name}<span class="required">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="name" class="form-control col-md-7 col-xs-12" name="name" value="{$data.name}" required type="text">
+                                <input id="name" class="form-control col-md-7 col-xs-12" name="name" required type="text">
                             </div>
                         </div>
                         <div class="item form-group">
                             <label for="parent_id" class="control-label col-md-3">{$Think.lang.parent_id}<span class="required">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <select id="parent_id" class="chosen-select form-control" name="parent_id" required>
-                                    <option value="0" {eq name="$data.parent_id" value="0" } selected {/eq}>{$Think.lang.top_parent_id}</option>
+                                    <option value="0">{$Think.lang.top_parent_id}</option>
                                     {foreach $parent as $vo}
-                                    <option value="{$vo.id}" data-id="{$vo.id}" {eq name="$data.parent_id" value="$vo.id" } selected {/eq}>{:str_repeat('-', 4*$vo.level).$vo.name}</option>
+                                    <option value="{$vo.id}" data-id="{$vo.id}">
+                                        {:str_repeat('-', 4*$vo.level).$vo.name}
+                                    </option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -26,60 +27,60 @@
                         <div class="item form-group">
                             <label for="module" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.module}<span class="required">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="module" type="text" name="module" value="{$data.module}" class="form-control col-md-7 col-xs-12">
+                                <input id="module" type="text" name="module" class="form-control col-md-7 col-xs-12" required>
                             </div>
                         </div>
                         <div class="item form-group">
-                            <label for="level" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.level}<span class="required">*</span></label>
+                            <label for="level"
+                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.level}<span class="required">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select id="level" class="chosen-select form-control" name="level">
-                                    <option value="1" {eq name="$data.level" value="1" } selected {/eq}>{$Think.lang.auth_level_1}</option>
-                                    <option value="2" {eq name="$data.level" value="2" } selected {/eq}>{$Think.lang.auth_level_2}</option>
-                                    <option value="3" {eq name="$data.level" value="3" } selected {/eq}>{$Think.lang.auth_level_3}</option>
+                                <select id="level" class="chosen-select form-control" name="level" required>
+                                    <option value="1">{$Think.lang.auth_level_1}</option>
+                                    <option value="2">{$Think.lang.auth_level_2}</option>
+                                    <option value="3">{$Think.lang.auth_level_3}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="item form-group">
-                            <label for="controller"
-                                   class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.controller}</label>
+                            <label for="controller" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.controller}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="controller" type="text" name="controller" value="{$data.controller}" class="form-control col-md-7 col-xs-12">
+                                <input id="controller" type="text" name="controller" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="item form-group">
                             <label for="action" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.action}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="action" type="text" name="action" value="{$data.action}" class="form-control col-md-7 col-xs-12">
+                                <input id="action" type="text" name="action" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="item form-group">
                             <label for="params" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.params}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="params" type="text" name="params" value="{$data.params}" class="form-control col-md-7 col-xs-12">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.status}</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <div id="status" class="btn-group" data-toggle="buttons">
-                                    <label class='btn btn-default {eq name="$data.status" value="0" } active {/eq}'>
-                                        <input type="radio" name="status" value="0" {eq name="$data.status" value="0" }checked{/eq}> &nbsp; {$Think.lang.status0} &nbsp;
-                                    </label>
-                                    <label class='btn btn-default {eq name="$data.status" value="1" } active {/eq}'>
-                                        <input type="radio" name="status" value="1" {eq name="$data.status" value="1"}checked{/eq}> {$Think.lang.status1}
-                                    </label>
-                                </div>
+                                <input id="params" type="text" name="params" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.is_show}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div id="is_show" class="btn-group" data-toggle="buttons">
-                                    <label class='btn btn-default {eq name="$data.is_show" value="0" } active {/eq}'>
-                                        <input type="radio" name="is_show" value="0" {eq name="$data.is_show" value="0"}checked{/eq}> &nbsp; {$Think.lang.no} &nbsp;
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="is_show" value="0"> &nbsp; {$Think.lang.no} &nbsp;
                                     </label>
-                                    <label class='btn btn-default {eq name="$data.is_show" value="1" } active {/eq}'>
-                                        <input type="radio" name="is_show" value="1" {eq name="$data.is_show" value="1"}checked{/eq}> {$Think.lang.yes}
+                                    <label class="btn btn-default active">
+                                        <input type="radio" name="is_show" value="1" checked> {$Think.lang.yes}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.status}</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div id="status" class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="status" value="0"> &nbsp; {$Think.lang.status0} &nbsp;
+                                    </label>
+                                    <label class="btn btn-default active">
+                                        <input type="radio" name="status" value="1" checked> {$Think.lang.status1}
                                     </label>
                                 </div>
                             </div>
@@ -87,13 +88,13 @@
                         <div class="item form-group">
                             <label for="icon" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.icon}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="icon" type="text" name="icon" value="{$data.icon}" class="form-control col-md-7 col-xs-12">
+                                <input id="icon" type="text" name="icon" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="item form-group">
                             <label for="sort" class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.sort}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="sort" type="number" name="sort" value="{$data.sort}" class="form-control col-md-7 col-xs-12">
+                                <input id="sort" type="number" name="sort" value="100" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="ln_solid"></div>

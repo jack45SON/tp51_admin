@@ -2,8 +2,8 @@
 
 namespace app\admin\service;
 
-use app\admin\action\GroupAction;
-use app\admin\repository\GroupRepository;
+use app\admin\action\BaseAction;
+use app\admin\repository\BaseRepository;
 use app\admin\validate\Group;
 
 class GroupService extends BaseService
@@ -16,8 +16,8 @@ class GroupService extends BaseService
     public function __construct($model)
     {
         $validate           = new Group();
-        $this->action       = new GroupAction($model, $validate);
-        $this->repository   = new GroupRepository($model);
+        $this->action       = new BaseAction($model, $validate);
+        $this->repository   = new BaseRepository($model);
         parent::__construct($this->repository,$this->action);
     }
 }

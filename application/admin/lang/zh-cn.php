@@ -94,5 +94,7 @@ return [
     'url'               => '链接',
 
 
-    'No rows were deleted'                                  => '未删除任何行',
+    'No rows were deleted'          => '未删除任何行',
+    'Unknown'                       => '未知',
+    'Login'                         => '登录',
 ];

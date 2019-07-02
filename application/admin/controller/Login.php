@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\AdminLog;
 use think\captcha\Captcha;
 use \think\Controller;
 use app\common\lib\IAuth as IAuth;
@@ -13,10 +14,8 @@ class Login extends Controller
     public function initialize()
     {
         parent::initialize();
-
         // 定义应用目录
         define('APP_PATH', \Env::get('root_path') . 'application/');
-        //定义模型、控制器、方法
         define('MODULE_NAME', strtolower(request()->module()));
         define('CONTROLLER_NAME', strtolower(request()->controller()));
         define('ACTION_NAME', strtolower(request()->action()));
@@ -63,8 +62,10 @@ class Login extends Controller
             if ($admin->status != config('admin.admin_status_normal')) {
                 return show(-1, lang('admin_stop'));
             }
+            IAuth::setPassword($data['password'],$admin->encrypt);
+            $password = IAuth::getPassword();
             //密码校验
-            if ($admin['password'] !== IAuth::setPassword($data['password'],$admin->encrypt)) {
+            if ($admin['password'] !== $password) {
                 return show(-1, lang('password_error'));
             }
 
@@ -105,18 +106,11 @@ class Login extends Controller
     public function layout()
     {
         $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
+        $redis = redis(config('admin.admin_redis_select'));
+        $redis->delete(config('admin.session_admin_id') . $adminId);
+        $AdminModel = new \app\admin\model\Admin();
+        $AdminModel->clearRedis($adminId,$redis);
         session(null,config('admin.session_admin_scope'));
-
-        $redis = redis(1);
-        $redis->delete(config('admin.session_admin_auth') . $adminId);
-        $redis->delete(config('admin.session_admin_menu') . $adminId);
-
-        $keys = $redis->keys(config('admin.session_admin_auth_check') . $adminId);
-        $redis->del($keys);
-        $keys = $redis->keys(config('admin.session_admin_auth_check_navP') . $adminId);
-        $redis->del($keys);
-        $keys = $redis->keys(config('admin.session_admin_auth_check_nav') . $adminId);
-        $redis->del($keys);
         $this->redirect('Login/index');
     }
 
@@ -128,6 +122,7 @@ class Login extends Controller
      */
     private function _loginSuccess($admin)
     {
+        AdminLog::setTitle(Lang('Login'));
         $upData = [
             'login_count' => $admin['login_count'] + 1,
             'last_time'   => date('Y-m-d H:i:s'),
@@ -138,8 +133,8 @@ class Login extends Controller
             ->save($upData, [
                 'id' => $admin['id']
             ]);
-        $admin = $AdminModel->with('adminInfo')->find($admin['id']);
-
+        $redis = redis(config('admin.admin_redis_select'));
+        $redis->set(config('admin.session_admin_id') . $admin['id'], $admin['id'], config('admin.redis_expire'));
         session(config('admin.session_admin_id'), $admin['id'],config('admin.session_admin_scope'));
         session(config('admin.session_admin_user'), $admin,config('admin.session_admin_scope'));
     }

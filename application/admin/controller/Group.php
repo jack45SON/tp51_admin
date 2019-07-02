@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\AdminGroup;
 use app\admin\model\GroupMenu;
 use app\admin\service\GroupService;
 use think\Db;
@@ -23,11 +24,19 @@ class Group extends Base
      */
     public function index()
     {
+//        $data = $this->model->alias('pg')
+//            ->field('pg.*')
+//            ->with(['adminGroup' => function ($query) {
+//                $query->alias('ag')->field('ag.*,ai.nickname')
+//                    ->join('admin_info ai','ai.admin_id = ag.admin_id','left');
+//            }])
+//            ->select();
+
         $data = $this->model->alias('pg')
             ->field('pg.*')
             ->with(['adminGroup' => function ($query) {
-                $query->alias('ag')->field('ag.*,ai.nickname')
-                    ->join('admin_info ai','ai.admin_id = ag.admin_id','left');
+                $query->alias('ag')->field('ag.*,a.name,a.nickname')
+                    ->join('admin a','a.id = ag.admin_id','left');
             }])
             ->select();
         return $this->fetch('',compact('data'));
@@ -39,7 +48,7 @@ class Group extends Base
      * @Author: liu tao
      * @return mixed
      */
-    public function add()
+    public function create()
     {
         if (request()->isAjax() && request()->isPost()) {
             $data = input('post.');
@@ -60,6 +69,9 @@ class Group extends Base
         if (request()->isAjax() && request()->isPost()) {
             $data = input('post.');
             $result = $this->service->edit($data);
+
+            //删除改组下的用户权限缓存
+            $this->clear($data['id']);
             return show($result['status'],$result['message']);
         }
         $id = request()->param('id');
@@ -97,14 +109,17 @@ class Group extends Base
                     ];
                 }
                 try {
-                    $id = $GroupMenuModel->saveAll($data);
+                    $res = $GroupMenuModel->saveAll($data);
                 } catch (\Exception $e) {
                     Db::rollback();
                     return show(-1, $e->getMessage());
                 }
 
-                if ($id) {
+                if ($res) {
                     Db::commit();
+
+                    //删除改组下的用户权限缓存
+                    $this->clear($id);
                     return show(1, lang('action_success'));
                 } else {
                     Db::rollback();
@@ -125,5 +140,15 @@ class Group extends Base
                 'menu_ids'         => $menu_ids,
             ]);
         }
+    }
+
+    private function clear($group_id){
+        //删除改组下的用户权限缓存
+        $AdminGroupModel = new AdminGroup();
+        $adminIds = $AdminGroupModel->where('group_id','eq',$group_id)->column('admin_id');
+        $AdminModel = new \app\admin\model\Admin();
+        $redis = redis(config('admin.admin_redis_select'));
+        $AdminModel->clearRedis($adminIds,$redis);
+        return true;
     }
 }

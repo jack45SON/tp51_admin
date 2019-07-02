@@ -18,11 +18,11 @@ if (!function_exists('authAction')) {
      * @author duqiu
      * @date 2016-5-14
      */
-    function authAction($rule, $title, $actionType = 'add', $isPageTable = true, $param = '', $height = 600)
+    function authAction($rule, $title, $actionType = 'create', $isPageTable = true, $param = '', $height = 600)
     {
         if ($isPageTable) {
             $actionTypes = [
-                'add'           => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('add') . "</a>",
+                'create'           => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('add') . "</a>",
                 'import'        => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('import') . "</a>",
                 'edit'          => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('edit') . "</a>",
                 'detail'        => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('detail') . "</a>",
@@ -34,7 +34,7 @@ if (!function_exists('authAction')) {
             ];
         } else {
             $actionTypes = [
-                'add'           => "<a href='" . url($rule, $param) . "'>" . lang('add') . "</a>",
+                'create'           => "<a href='" . url($rule, $param) . "'>" . lang('add') . "</a>",
                 'recycle'       => "<a href='" . url($rule, $param) . "'>" . lang('recycle') . "</a>",
                 'list'          => "<a href='" . url($rule, $param) . "'>" . lang('list') . "</a>",
                 'import'        => "<a href='" . url($rule, $param) . "'>" . lang('import') . "</a>",
@@ -74,7 +74,7 @@ if (!function_exists('authCheck')) {
             'status'        => 1,
         ];
         $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
-        $redis = redis(1);
+        $redis = redis(config('admin.admin_redis_select'));
         $Auth = new \app\admin\lib\Auth($adminId,$redis);
         $GroupMenu = json_decode($redis->get(config('admin.session_admin_auth') . $adminId),true);
         return $Auth::authCheck($GroupMenu,$where);
@@ -100,7 +100,7 @@ if (!function_exists('getNavP')) {
         ];
 
         $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
-        $redis = redis(1);
+        $redis = redis(config('admin.admin_redis_select'));
         $Auth = new \app\admin\lib\Auth($adminId,$redis);
         return $Auth::getNavP($parent_id,$where);
     }
@@ -120,7 +120,7 @@ if (!function_exists('getNav')) {
     {
 
         $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
-        $redis = redis(1);
+        $redis = redis(config('admin.admin_redis_select'));
         //判断该权限是否存在
         if($redis->exists(config('admin.session_admin_auth_check_nav') . $adminId . $id)){
             $auth =json_decode($redis->get(config('admin.session_admin_auth_check_nav')  . $adminId. $id),true);

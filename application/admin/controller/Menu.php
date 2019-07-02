@@ -65,7 +65,7 @@ class Menu extends Base
      * @Author: liu tao
      * @return mixed
      */
-    public function add()
+    public function create()
     {
         if (request()->isAjax() && request()->isPost()) {
             return $this->save();

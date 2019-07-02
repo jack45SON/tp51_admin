@@ -4,7 +4,7 @@
             <div class="x_panel">
                 <div class="x_content">
                     <br/>
-                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/{:MODULE_NAME}/{:CONTROLLER_NAME}/add',true);">
+                    <form class="form-horizontal" method="post" action=""  onsubmit="return AddEditFrom(this,'/{:MODULE_NAME}/{:CONTROLLER_NAME}/create',true);">
                         <div class="item form-group">
                             <label class="control-label col-md-3" for="name">{$Think.lang.name}<span
                                     class="required">*</span>
@@ -26,10 +26,10 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.status}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div id="status" class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                    <label class="btn btn-default">
                                         <input type="radio" name="status" value="0"> &nbsp; {$Think.lang.status0} &nbsp;
                                     </label>
-                                    <label class="btn btn-primary active" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                    <label class="btn btn-default active" >
                                         <input type="radio" name="status" value="1" checked> {$Think.lang.status1}
                                     </label>
                                 </div>

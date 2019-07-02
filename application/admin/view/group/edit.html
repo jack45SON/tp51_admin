@@ -27,11 +27,11 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">{$Think.lang.status}</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div id="status" class="btn-group" data-toggle="buttons">
-                                    <label class='btn btn-default {eq name="$data.status" value="0" } active {/eq}' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                        <input type="radio" name="status" value="0"{eq name="$data.status" value="0" } checked {/eq}> &nbsp; {$Think.lang.status0} &nbsp;
+                                    <label class='btn btn-default {eq name="$data.status" value="0" } active {/eq}'>
+                                        <input type="radio" name="status" value="0" {eq name="$data.status" value="0" }checked{/eq}> &nbsp; {$Think.lang.status0} &nbsp;
                                     </label>
-                                    <label class='btn btn-primary {eq name="$data.status" value="1" } active {/eq}' data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                        <input type="radio" name="status" value="1" {eq name="$data.status" value="1" } checked {/eq}> {$Think.lang.status1}
+                                    <label class='btn btn-default {eq name="$data.status" value="1" } active {/eq}'>
+                                        <input type="radio" name="status" value="1" {eq name="$data.status" value="1"}checked{/eq}> {$Think.lang.status1}
                                     </label>
                                 </div>
                             </div>
