@@ -1,6 +1,6 @@
 {extend name="public/_base" /}
 
-{block name="title"}<title>管理组 - 系统管理</title>{/block}
+{block name="title"}<title>管理组 - 权限管理</title>{/block}
 
 {block name="right"}
 
@@ -23,50 +23,46 @@
                     </div>
 
                     <div class="x_content">
-                        <div class="table-responsive">
-                            <table class="table table-striped jambo_table bulk_action">
-                                <thead>
-                                <tr class="headings">
-                                    <th class="column-title" style="width: 5%">Id</th>
-                                    <th class="column-title" style="width: 10%">{$Think.lang.name}</th>
-                                    <th class="column-title" style="width: 20%">{$Think.lang.desc}</th>
-                                    <th class="column-title" style="width: 40%">管理员</th>
-                                    <th class="column-title" style="width: 10%">{$Think.lang.status}</th>
-                                    <!--<th class="column-title">{$Think.lang.create_time}</th>-->
-                                    <!--<th class="column-title">{$Think.lang.update_time}</th>-->
-                                    <th class="column-title" style="width: 10%">{$Think.lang.action}</th>
-                                </tr>
+                        <table class="table table-striped bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                <th style="width: 5%">ID</th>
+                                <th style="width: 10%">{$Think.lang.name}</th>
+                                <th style="width: 20%">{$Think.lang.desc}</th>
+                                <th style="width: 40%">管理员</th>
+                                <th style="width: 10%">{$Think.lang.status}</th>
+                                <!--<th>{$Think.lang.create_time}</th>-->
+                                <!--<th>{$Think.lang.update_time}</th>-->
+                                <th style="width: 10%">{$Think.lang.action}</th>
+                            </tr>
 
-                                </thead>
-                                <tbody>
-                                {foreach $data as $vo }
-                                <tr class="even pointer">
-                                    <td>{$vo.id}</td>
-                                    <td>{$vo.name}</td>
-                                    <td>{$vo.desc}</td>
-                                    <td>
-                                        <?php $array=[];?>
-                                        {foreach $vo.admin_group as $v }
-                                            <?php $array[]= $v['nickname'] ?? $v['name'];?>
-                                        {/foreach}
-                                        {:implode(',',$array)}
-                                    </td>
-                                    <td>
-                                        {:yesOrNo('status',$vo.status,$vo.id)}
-                                    </td>
-                                    <!--<td>{$vo.create_time}</td>-->
-                                    <!--<td>{$vo.update_time}</td>-->
-                                    <td>
-                                        <p class="url">
-                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id)}
-                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/setPrivilege', '设置权限','setPrivilege',true,$vo.id)}
-                                       </p>
-                                    </td>
-                                </tr>
-                                {/foreach}
-                                </tbody>
-                            </table>
-                        </div>
+                            </thead>
+                            <tbody>
+                            {foreach $data as $vo }
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.name}</td>
+                                <td>{$vo.desc}</td>
+                                <td>
+                                    <?php $array=[];?>
+                                    {foreach $vo.admin_group as $v }
+                                        <?php $array[]= $v['nickname'] ?? $v['name'];?>
+                                    {/foreach}
+                                    {:implode(',',$array)}
+                                </td>
+                                <td>
+                                    {:yesOrNo('status',$vo.status,$vo.id)}
+                                </td>
+                                <!--<td>{$vo.create_time}</td>-->
+                                <!--<td>{$vo.update_time}</td>-->
+                                <td>
+                                    {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id)}
+                                    {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/setPrivilege', '设置权限','setPrivilege',true,$vo.id)}
+                                </td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -74,14 +70,4 @@
     </div>
 </div>
 <!-- /page content -->
-{/block}
-
-{block name="js"}
-<script language="javascript">
-    $(document).ready(function () {
-        $('.edit_radio_btn').on('click',function () {
-            editor_radio($(this), '/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit')
-        });
-    });
-</script>
 {/block}

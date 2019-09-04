@@ -13,13 +13,20 @@ trait Backend
      */
     public function index()
     {
+        $param = input('get.');
+        $where = SearchWhere($param);
+        $pageNum = input('_pagination',5);
         $data = $this->model
-            ->paginate(50,false,['query'=>request()->param()]);
+            ->where($where['where'])
+            ->order($where['order'])
+            ->paginate($pageNum,false,['query'=>request()->param()]);
 
         return $this->fetch('', [
             'data'          => $data,
             'count'         => $data->total(),
-            'page'          => $data->render()
+            'page'          => $data->render(),
+            'listRows'      => $data->listRows(),
+            'total'         => count($data)
         ]);
     }
 
@@ -55,7 +62,7 @@ trait Backend
 
         $id = request()->param('id');
         if ($id) {
-            $data = $this->service->getDetail();
+            $data = $this->service->getDetail($id);
             return $this->fetch('',[
                 'data'          => $data
             ]);

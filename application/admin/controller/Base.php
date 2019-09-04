@@ -70,7 +70,7 @@ class Base extends Controller
         //如果权限存在则不进行判断
         if ($redis->exists(config('admin.session_admin_auth') . $this->adminId)) {
             if ($redis->exists(config('admin.session_admin_menu') . $this->adminId)) {
-                $menus = json_decode($redis->get(config('admin.session_admin_menu') . $this->adminId),true);
+                $menus      = json_decode($redis->get(config('admin.session_admin_menu') . $this->adminId),true);
             }
         } else {
             $Auth = new Auth($this->adminId,$redis);
@@ -105,6 +105,7 @@ class Base extends Controller
             View::share('menus', $menus);
             View::share('adminUser', $this->adminUser);
             View::share('select_url', $this->getUrl());
+            View::share('page_param', [10, 20, 50, 100]);
         }
 
 

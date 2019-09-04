@@ -22,15 +22,15 @@ if (!function_exists('authAction')) {
     {
         if ($isPageTable) {
             $actionTypes = [
-                'create'           => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('add') . "</a>",
+                'create'        => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('add') . "</a>",
                 'import'        => "<a onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('import') . "</a>",
                 'edit'          => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('edit') . "</a>",
                 'detail'        => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('detail') . "</a>",
-
-                'setPrivilege'          => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('setPrivilege') . "</a>",
+                'setPrivilege'  => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('setPrivilege') . "</a>",
                 'delete'        => "<a class='btn btn-danger btn-xs' onclick='deleteData(\"$rule\",$param);'>" . lang('delete') . "</a>",
                 'restore'       => "<a class='btn btn-success btn-xs' onclick='deleteData(\"$rule\",$param);'>" . lang('restore') . "</a>",
 
+                'content'       => "<a class='btn btn-info btn-xs' onclick='pageTable(\"$title\",\"$rule\",\"$param\",$height);'>" . lang('content') . "</a>",
             ];
         } else {
             $actionTypes = [
@@ -185,6 +185,78 @@ if (!function_exists('getNav')) {
 
 
 
+if(!function_exists('SearchWhere')) {
+    function SearchWhere($data=[],$no_keys=[]) {
+        $return['order'] = '';
+        $return['where'] = [];
+        $default_keys = ['export_type', 'limit', '_pagination', 'page', '_sort', 'is_export'];
+        $no_keys = $no_keys ? array_unique(array_merge($no_keys, $default_keys)) : $default_keys;
+        if ($data) {
+            foreach($data as $w_k=>$w_v){
+                if(strstr($w_k,'other^')){
+                    $value = explode('=',$w_v);
+                    if(count($value) == 2){
+                        $return = SearchWhereFields($value[0],$value[1],$return);
+                    }
+                }else{
+                    if(!in_array($w_k,$no_keys)) {
+
+                        $w_v = is_array($w_v)?$w_v:trim($w_v);
+                        if ($w_v) {
+                            if ($w_k == 'field') {
+                                //排序
+                                $return['order'] = [$w_v => $data['_sort']];
+                            } else {
+                                //查询条件
+                                $return = SearchWhereFields($w_k,$w_v,$return);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $return;
+    }
+}
+if(!function_exists('SearchWhereFields')) {
+    function SearchWhereFields($w_k,$w_v,$return = []) {
+        $op         = 'eq';
+        $condition  = '';
+        $value_type = explode('__', $w_k);
+        if (isset($value_type[1])) {
+            $value = str_replace('^', '.', $value_type[0]);
+            $field = $value;
+            if (in_array($value_type[1], ['lt', 'gt', 'elt', 'egt', 'in', 'not in', 'eq'])) {
+                $op         = $value_type[1];
+                $condition  = $w_v;
+            } else if (in_array($value_type[1], ['like%', '%like', '%like%', 'like'])) {
+                $op = 'like';
+                switch ($value_type[1]) {
+                    case 'like%':
+                        $condition = $w_v . '%';
+                        break;
+                    case '%like':
+                        $condition = '%' . $w_v;
+                        break;
+                    default:
+                        $condition = '%' . $w_v . '%';
+                        break;
+                }
+            }
+        } else {
+            $value = str_replace('^', '.', $w_k);
+            $return['where'][] = $w_v;
+            $field      = $value;
+            $op         = 'eq';
+            $condition  = $w_v;
+        }
+        $return['where'][] = [$field, $op, $condition];
+        return $return;
+    }
+}
+
+
+
 if (!function_exists('yesOrNo')) {
     /**
      * @Title: yesOrNo
@@ -207,12 +279,37 @@ if (!function_exists('yesOrNo')) {
                 $class = 'btn-danger';
                 $name = $field == 'status'?'禁止':'否';
             }
-            $btn = '<button type="button" class="btn ' . $class . ' btn-sm" data-id="' . $id . '" data-field="' . $field . '" data-value="' . $value . '">' . $name . '</button>';
-            $str = '<p class="edit_radio_btn">' . $btn . '</p>';
+            $btn = '<button type="button" class="btn ' . $class . ' btn-xs" data-id="' . $id . '" data-field="' . $field . '" data-value="' . $value . '">' . $name . '</button>';
+            $str = '<span class="edit_radio_btn">' . $btn . '</span>';
         } else {
-            $str = '<p class="editor_field" data-id="' . $id . '" data-field="' . $field . '" data-value="' . $value . '">' . $value . '</p>';
+            $str = '<span class="editor_field" data-id="' . $id . '" data-field="' . $field . '" data-value="' . $value . '">' . $value . '</span>';
         }
         return $str;
     }
 }
+
+
+if (!function_exists('fieldSort')) {
+    /**
+     * @Title: fieldSort
+     * @Description: todo()
+     * @Author: liu tao
+     * @Time: xxx
+     * @param $field
+     * @return string
+     */
+    function fieldSort($field){
+        $sort = '';
+        if($field == trim(input('get.field'))){
+            if(trim(input('get._sort')) == 'asc'){
+                $sort .= 'asc';
+            }else{
+                $sort .= 'desc';
+            }
+        }
+        return 'class="sortable both '.$sort.'" data-field="'.$field.'"';
+    }
+}
+
+
 

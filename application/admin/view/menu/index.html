@@ -1,6 +1,6 @@
 {extend name="public/_base" /}
 
-{block name="title"}<title>菜单 - 系统管理</title>{/block}
+{block name="title"}<title>菜单 - 权限管理</title>{/block}
 
 {block name="right"}
 
@@ -15,7 +15,6 @@
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
-                            <!--<li><a onclick="deleteData('deleteType');">删除</a>-->
                             <li>
                                 {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/create', '添加菜单','create',true,'',750)}
                             </li>
@@ -24,54 +23,50 @@
                     </div>
 
                     <div class="x_content">
-                        <div class="table-responsive">
-                            <table class="table table-striped jambo_table bulk_action">
-                                <thead>
-                                <tr class="headings">
-                                    <th class="column-title"  style="width: 5%">Id</th>
-                                    <th class="column-title"  style="width: 22%">名称</th>
-                                    <th class="column-title">模块</th>
-                                    <th class="column-title">控制器</th>
-                                    <th class="column-title">方法名</th>
-                                    <th class="column-title">参数</th>
-                                    <th class="column-title">状态</th>
-                                    <th class="column-title">是否显示</th>
-                                    <!--<th class="column-title">创建时间</th>-->
-                                    <!--<th class="column-title">修改时间</th>-->
-                                    <th class="column-title">操作管理</th>
-                                </tr>
+                        <table class="table table-striped bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                <th style="width: 5%">ID</th>
+                                <th style="width: 22%">名称</th>
+                                <th>模块</th>
+                                <th>控制器</th>
+                                <th>方法名</th>
+                                <th>参数</th>
+                                <th>状态</th>
+                                <th>是否显示</th>
+                                <!--<th>创建时间</th>-->
+                                <!--<th>修改时间</th>-->
+                                <th>操作管理</th>
+                            </tr>
 
-                                </thead>
-                                <tbody>
-                                {foreach $data as $vo }
-                                <tr class="even pointer">
-                                    <td>{$vo.id}</td>
-                                    <td>
-                                        {:str_repeat('-', 8*$vo.level).$vo.name}
-                                    </td>
-                                    <td>{$vo.module}</td>
-                                    <td>{$vo.controller}</td>
-                                    <td>{$vo.action}</td>
-                                    <td>{$vo.params}</td>
-                                    <td>
-                                        {:yesOrNo('status',$vo.status,$vo.id)}
-                                    </td>
-                                    <td>
-                                        {:yesOrNo('is_show',$vo.is_show,$vo.id)}
-                                    </td>
-                                    <!--<td>{$vo.create_time}</td>-->
-                                    <!--<td>{$vo.update_time}</td>-->
-                                    <td>
-                                        <p class="url">
-                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改菜单','edit',true,$vo.id,750)}
-                                        </p>
-                                    </td>
-                                </tr>
-                                {/foreach}
-                                </tbody>
-                            </table>
-                            {$page|raw}
-                        </div>
+                            </thead>
+                            <tbody>
+                            {foreach $data as $vo }
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td>
+                                    {:str_repeat('-', 8*$vo.level).$vo.name}
+                                </td>
+                                <td>{$vo.module}</td>
+                                <td>{$vo.controller}</td>
+                                <td>{$vo.action}</td>
+                                <td>{$vo.params}</td>
+                                <td>
+                                    {:yesOrNo('status',$vo.status,$vo.id)}
+                                </td>
+                                <td>
+                                    {:yesOrNo('show',$vo.show,$vo.id)}
+                                </td>
+                                <!--<td>{$vo.create_time}</td>-->
+                                <!--<td>{$vo.update_time}</td>-->
+                                <td>
+                                    {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改菜单','edit',true,$vo.id,750)}
+                                </td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                        {$page|raw}
                     </div>
                 </div>
             </div>
@@ -79,15 +74,4 @@
     </div>
 </div>
 <!-- /page content -->
-{/block}
-
-
-{block name="js"}
-<script language="javascript">
-    $(document).ready(function () {
-        $('.edit_radio_btn').on('click',function () {
-            editor_radio($(this), '/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit')
-        });
-    });
-</script>
 {/block}

@@ -7,8 +7,8 @@ return [
     'action_fail'       => '操作失败',
 
 
-    'create_time'            => '创建时间',
-    'update_time'            => '更新时间',
+    'create_time'       => '创建时间',
+    'update_time'       => '更新时间',
     
     'upload_success'    => '上传成功',
     'upload_fail'       => '上传失败',
@@ -26,6 +26,7 @@ return [
     'recycle'           => '回收站',
     'detail'            => '详情',
     'setPrivilege'      => '权限',
+    'content'           => '内容',
     'search'            => '搜索',
     'back'              => '返回',
     'reset'             => '撤销',
@@ -88,10 +89,11 @@ return [
 
 
     'location'          => '位置',
-    'is_show'           => '显示',
+    'show'              => '显示',
     'title'             => '标题',
     'desc'              => '描述',
     'url'               => '链接',
+    'type'              => '类型',
 
 
     'No rows were deleted'          => '未删除任何行',

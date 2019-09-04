@@ -108,9 +108,9 @@ function editor_radio(_ths, url) {
             layer.closeAll();
             layer.msg(ret.message);
             if (Number(ret.status) === 1) {
-                var str = '<p class="edit_radio_btn">' +
-                    '<button type="button" class="btn ' + _class + ' btn-sm" data-field="' + field + '" data-id="' + id + '" data-value="' + _value + '">' + name +
-                    '</button></p>';
+                var str = '<span class="edit_radio_btn">' +
+                    '<button type="button" class="btn ' + _class + ' btn-xs" data-field="' + field + '" data-id="' + id + '" data-value="' + _value + '">' + name +
+                    '</button></span>';
                 _ths.html(str);
             }
             return false;

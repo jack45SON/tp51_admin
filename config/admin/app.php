@@ -17,4 +17,13 @@ return [
     'static'                    =>'/static/admin',
     'admin_avatar'              =>'/static/admin/production/images/avatar.png',
 
+
+    'type_type_1'   => '动态',
+    'type_type_2'   => '论坛',
+    'type_type_3'   => '画廊',
+
+    'tag_type_1'    => '默认',
+    'tag_type_2'    => '',
+    'tag_type_3'    => '',
+
 ];

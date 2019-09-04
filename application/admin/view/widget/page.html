@@ -1,0 +1,14 @@
+{$page|raw}
+<ul class="pagination">
+    <li class="disabled"><a>本页共{$total}条</a></li>
+    <li class="disabled"><a>共{$count}条</a></li>
+    <li class="disabled">
+        <span>
+            <select id="_pagination">
+                {foreach $page_param as $vo}
+                <option value="{$vo}" {eq name="$listRows" value="$vo"} selected {/eq}>{$vo}条/页</option>
+                {/foreach}
+            </select>
+        </span>
+    </li>
+</ul>

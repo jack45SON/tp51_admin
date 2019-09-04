@@ -100,7 +100,7 @@ class Auth
         $MenuModel  = new Menu();
         $menus = $MenuModel
             ->where('level', 'in', [1, 2])
-            ->where('is_show', 'eq', 1)
+            ->where('show', 'eq', 1)
             ->where('status', 'eq', 1)
             ->where($where)
             ->order('sort', 'asc')

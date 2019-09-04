@@ -1,0 +1,77 @@
+{extend name="public/_base" /}
+
+{block name="title"}<title>类型 - 类型管理</title>{/block}
+
+{block name="right"}
+
+<!-- page content -->
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>类型列表</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li>
+                                {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/create', '添加','create',true,'')}
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <table class="table table-striped bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                <th {:fieldSort("id")}>ID</th>
+                                <th>{$Think.lang.name}</th>
+                                <th {:fieldSort("type")}>{$Think.lang.type}</th>
+                                <th {:fieldSort("sort")}>{$Think.lang.sort}</th>
+                                <th>{$Think.lang.show}</th>
+                                <th>{$Think.lang.create_time}</th>
+                                <th>{$Think.lang.update_time}</th>
+                                <th>{$Think.lang.action}</th>
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            {foreach $data as $vo }
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.name}</td>
+                                <td>{$vo.type}</td>
+                                <td>{$vo.sort}</td>
+                                <td>
+                                    {:yesOrNo('show',$vo.show,$vo.id)}
+                                </td>
+                                <td>{$vo.create_time}</td>
+                                <td>{$vo.update_time}</td>
+                                <td>
+                                    {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id)}
+                                </td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                        {$page|raw}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /page content -->
+{/block}
+
+{block name="js"}
+<script language="javascript">
+
+    $(document).ready(function () {
+        $('.edit_radio_btn').on('click',function () {
+            editor_radio($(this), '/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit')
+        });
+    });
+</script>
+{/block}

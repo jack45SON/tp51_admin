@@ -1,0 +1,42 @@
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="x_panel">
+                <div class="x_content">
+                    {if condition="is_array($data.content)"}
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                {foreach $data.content as $key=>$val}
+                                <th>{:lang($key)}</th>
+                                {/foreach}
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {foreach $data.content as $key=>$val}
+                                <th>{$val}</th>
+                                {/foreach}
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    {/if}
+                    {:dump($data.content)}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{block name="js"}
+<script>
+    $(function () {
+        $(document).ready(function() {
+            $('.chosen-select').chosen();
+        });
+    });
+</script>
+{/block}

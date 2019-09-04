@@ -9,39 +9,59 @@
     {block name="title"}<title>后台首页</title>{/block}
     {block name="top"}{include file="public/_top" /}{/block}
     <style type="text/css">
-    table {
-        table-layout: fixed;
-    }
+        table {
+            table-layout: fixed;
+        }
 
-    td {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
+        td {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
 
 
-    .chosen-search-input,.chosen-container-multi{
-        width: 100%!important;
-    }
+        .chosen-search-input,.chosen-container-multi{
+            width: 100%!important;
+        }
 
-    .editor_field{
-        color: #0088cc;
-        display: inline-block;
-        border-bottom: dashed 1px #0088cc;
-        cursor: pointer;
-    }
+        .editor_field{
+            color: #0088cc;
+            display: inline-block;
+            border-bottom: dashed 1px #0088cc;
+            cursor: pointer;
+        }
 
-    .btn-default.active{
-        background-color: #f0ad4e;
-        color: #000;
-    }
+        .btn-default.active{
+            background-color: #f0ad4e;
+            color: #000;
+        }
 
-    ._current-page {
-        background: rgba(255,255,255,.05);
-    }
-    ._current-page a {
-        color: #fff!important;
-    }
+        ._current-page {
+            background: rgba(255,255,255,.05);
+        }
+        ._current-page a {
+            color: #fff!important;
+        }
+
+
+        .both{
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAQAAADYWf5HAAAAkElEQVQoz7X QMQ5AQBCF4dWQSJxC5wwax1Cq1e7BAdxD5SL+Tq/QCM1oNiJidwox0355mXnG/DrEtIQ6azioNZQxI0ykPhTQIwhCR+BmBYtlK7kLJYwWCcJA9M4qdrZrd8pPjZWPtOqdRQy320YSV17OatFC4euts6z39GYMKRPCTKY9UnPQ6P+GtMRfGtPnBCiqhAeJPmkqAAAAAElFTkSuQmCC');
+        }
+        .sortable{
+            cursor: pointer;
+            background-position: left;
+            background-repeat: no-repeat;
+            padding-left: 20px!important;
+        }
+
+
+        .desc{
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZUlEQVQ4y2NgGAWjYBSggaqGu5FA/BOIv2PBIPFEUgxjB+IdQPwfC94HxLykus4GiD+hGfQOiB3J8SojEE9EM2wuSJzcsFMG4ttQgx4DsRalkZENxL+AuJQaMcsGxBOAmGvopk8AVz1sLZgg0bsAAAAASUVORK5CYII=');
+        }
+
+        .asc{
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZ0lEQVQ4y2NgGLKgquEuFxBPAGI2ahhWCsS/gDibUoO0gPgxEP8H4ttArEyuQYxAPBdqEAxPBImTY5gjEL9DM+wTENuQahAvEO9DMwiGdwAxOymGJQLxTyD+jgWDxCMZRsEoGAVoAADeemwtPcZI2wAAAABJRU5ErkJggg==');
+        }
 
     </style>
 </head>

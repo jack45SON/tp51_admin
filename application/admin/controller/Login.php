@@ -37,9 +37,18 @@ class Login extends Controller
      */
     public function index()
     {
-        if (session('?'.config('admin.session_admin_id'),'',config('admin.session_admin_scope'))) {
-            $this->redirect('Index/index');
+        $flag = false;
+        $adminId = session(config('admin.session_admin_id'), '', config('admin.session_admin_scope'));
+        if ($adminId) {
+            $redis = redis(config('admin.admin_redis_select'));
+            if($redis->exists(config('admin.session_admin_id') . $adminId)){
+                $flag =  true;
+            }
         }
+        if($flag){
+            $this->redirect('/'.MODULE_NAME.'/index/index');
+        }
+
         if (request()->isPost()) {
             $data = input('post.');
             $validate = new \app\admin\validate\Admin();

@@ -200,6 +200,7 @@ if (!function_exists('getLimit')) {
     {
         $pageNo = input('pageNo') ? input('pageNo') : 1;
         $pageSize = input('pageSize') ? input('pageSize') : ($size > 0 ? $size : 10);
+        $pageSize = $pageSize > 50 ? 0 : $pageSize;
         $start = ($pageNo - 1) * $pageSize;
         $end = $pageSize;
         $limit = $start . ',' . $end;

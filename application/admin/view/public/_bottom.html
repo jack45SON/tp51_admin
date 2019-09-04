@@ -3,12 +3,16 @@
 <script src="{:config('static')}/vendors/fastclick/lib/fastclick.js"></script>
 <script src="{:config('static')}/vendors/nprogress/nprogress.js"></script>
 <script src="{:config('static')}/vendors/iCheck/icheck.min.js"></script>
+
+
+
 <script src="{:config('static')}/vendors/Chart.js/dist/Chart.min.js"></script>
 <script src="{:config('static')}/vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
 <script src="{:config('static')}/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
 <script src="{:config('static')}/vendors/moment/min/moment.min.js"></script>
 <script src="{:config('static')}/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 <script src="{:config('static')}/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+
 <!-- Select2 -->
 <script src="{:config('static')}/vendors/select2/dist/js/select2.full.min.js"></script>
 
@@ -28,6 +32,8 @@
 <script src="{:config('static')}/vendors/flot.curvedlines/curvedLines.js"></script>
 <script src="{:config('static')}/vendors/DateJS/build/date.js"></script>
 <script src="{:config('static')}/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
+
 <script src="{:config('static')}/build/js/custom.min.js"></script>
 
 <script src="{:config('static')}/common.js"></script>
@@ -41,11 +47,12 @@
 
 <script src="{:config('static')}/chosen/chosen.jquery.min.js"></script>
 <script>
+    var _url = '{:request()->baseUrl()}?';
     $('.collapse-search').click(function () {
         if($('#_pagination').length>0){
-            window.location.href = '{:url()}?'+$('.searchFrom').serialize()+"&_pagination="+$('#_pagination').val();
+            window.location.href = _url + $('.searchFrom').serialize() + "&_pagination=" + $('#_pagination').val();
         }else{
-            window.location.href = '{:url()}?'+$('.searchFrom').serialize();
+            window.location.href = _url + $('.searchFrom').serialize();
         }
 
     });
@@ -56,9 +63,9 @@
             .removeAttr('checked')
             .removeAttr('selected');
         if($('#_pagination').length>0){
-            window.location.href = '{:url()}?'+$('.searchFrom').serialize()+"&_pagination="+$('#_pagination').val();
+            window.location.href = _url + $('.searchFrom').serialize() + "&_pagination=" + $('#_pagination').val();
         }else{
-            window.location.href = '{:url()}?'+$('.searchFrom').serialize();
+            window.location.href = _url + $('.searchFrom').serialize();
         }
     });
 
@@ -67,41 +74,33 @@
     });
 
     $('#jumpPage').on('click', function(){
-        var select_url = "{$select_url|raw}";
-        if(select_url.indexOf('?')!== -1){
-            select_url +='&';
-        }else{
-            select_url +='?';
-        }
         if($('#_pagination').length>0){
-            location.href = select_url+"page="+$('#pageNum').val()+"&_pagination="+$('#_pagination').val();
+            window.location.href = _url + $('.searchFrom').serialize() + "&page=" + $('#pageNum').val() + "&_pagination=" + $('#_pagination').val();
         }else{
-            location.href = select_url+"page="+$('#pageNum').val();
+            window.location.href = _url + $('.searchFrom').serialize() + "&page=" + $('#pageNum').val();
         }
 
     });
     $('#_pagination').on('change', function(){
-        var select_url = "{$select_url|raw}";
-        if(select_url.indexOf('?')!== -1){
-            select_url +='&';
-        }else{
-            select_url +='?';
-        }
-        location.href = select_url+"_pagination="+$('#_pagination').val();
+        window.location.href = _url + $('.searchFrom').serialize() + "&_pagination=" + $('#_pagination').val() + "&page=1";
     });
 
     $('.sortable').click(function () {
-        var select_url = "{$select_url|raw}";
         var field = $(this).data('field');
-        if(select_url.indexOf('?')!== -1){
-            select_url +='&';
-        }else{
-            select_url +='?';
-        }
         if($(this).hasClass("desc")){
-            location.href = select_url+'field='+field+'&sort=asc';return;
+            window.location.href = _url + $('.searchFrom').serialize() + '&field=' + field + '&_sort=asc';
+            return;
         }
-        location.href = select_url+'field='+field+'&sort=desc';
+        window.location.href = _url + $('.searchFrom').serialize() + '&field=' + field + '&_sort=desc';
+    });
+
+    $(function () {
+        $(document).ready(function() {
+            $('.chosen-select').select2();
+            $('.edit_radio_btn').on('click',function () {
+                editor_radio($(this), '/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit')
+            });
+        });
     });
 </script>
 

@@ -6,7 +6,7 @@ return [
     'controller'        => '控制器',
     'action'            => '方法',
     'params'            => '参数',
-    'is_show'           => '是否显示',
+    'show'           => '是否显示',
     'icon'              => '图标',
 
 

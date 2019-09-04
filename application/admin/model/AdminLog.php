@@ -90,4 +90,14 @@ class AdminLog extends Base
         }
         return $ret;
     }
+
+    public function getIpAttr($value)
+    {
+        return long2ip($value);
+    }
+
+    public function getContentAttr($value)
+    {
+        return json_decode($value, true) ? json_decode($value, true) : $value;
+    }
 }

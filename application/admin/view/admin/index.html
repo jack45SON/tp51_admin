@@ -1,6 +1,6 @@
 {extend name="public/_base" /}
 
-{block name="title"}<title>管理员 - 系统管理</title>{/block}
+{block name="title"}<title>管理员 - 权限管理</title>{/block}
 
 {block name="right"}
 
@@ -21,42 +21,37 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-
                     <div class="x_content">
-                        <div class="table-responsive">
-                            <table class="table table-striped jambo_table bulk_action">
-                                <thead>
-                                <tr class="headings">
-                                    <th class="column-title">Id</th>
-                                    <th class="column-title">{$Think.lang.name}</th>
-                                    <th class="column-title">{$Think.lang.status}</th>
-                                    <th class="column-title">{$Think.lang.create_time}</th>
-                                    <th class="column-title">{$Think.lang.update_time}</th>
-                                    <th class="column-title">{$Think.lang.action}</th>
-                                </tr>
+                        <table class="table table-striped bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                <th>ID</th>
+                                <th>{$Think.lang.name}</th>
+                                <th>{$Think.lang.status}</th>
+                                <th>{$Think.lang.create_time}</th>
+                                <th>{$Think.lang.update_time}</th>
+                                <th>{$Think.lang.action}</th>
+                            </tr>
 
-                                </thead>
-                                <tbody>
-                                {foreach $data as $vo }
-                                <tr class="even pointer">
-                                    <td>{$vo.id}</td>
-                                    <td>{$vo.name}</td>
-                                    <td>
-                                        {:yesOrNo('status',$vo.status,$vo.id)}
-                                    </td>
-                                    <td>{$vo.create_time}</td>
-                                    <td>{$vo.update_time}</td>
-                                    <td>
-                                        <p class="url">
-                                            {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id,700)}
-                                        </p>
-                                    </td>
-                                </tr>
-                                {/foreach}
-                                </tbody>
-                            </table>
-                            {$page|raw}
-                        </div>
+                            </thead>
+                            <tbody>
+                            {foreach $data as $vo }
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.name}</td>
+                                <td>
+                                    {:yesOrNo('status',$vo.status,$vo.id)}
+                                </td>
+                                <td>{$vo.create_time}</td>
+                                <td>{$vo.update_time}</td>
+                                <td>
+                                    {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/edit', '修改','edit',true,$vo.id,700)}
+                                </td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                        {$page|raw}
                     </div>
                 </div>
             </div>
@@ -64,15 +59,4 @@
     </div>
 </div>
 <!-- /page content -->
-{/block}
-
-{block name="js"}
-<script language="javascript">
-
-    $(document).ready(function () {
-        $('.edit_radio_btn').on('click',function () {
-            editor_radio($(this), '/{:MODULE_NAME}/{:CONTROLLER_NAME}/edit')
-        });
-    });
-</script>
 {/block}

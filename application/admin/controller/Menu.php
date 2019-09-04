@@ -24,7 +24,7 @@ class Menu extends Base
         $menu = $this->model
             ->where('level','eq',1)
             ->order('sort asc')
-            ->paginate(1,false,['query'=>request()->param()]);
+            ->paginate(2,false,['query'=>request()->param()]);
         $parent = $menu->toArray();
         $arr=[];
         foreach ($parent['data'] as $v){
@@ -53,7 +53,7 @@ class Menu extends Base
         $_data = array_merge($parent['data'],$child1,$child2);
         $data = $this->model->getTree($_data);
         return $this->fetch('', [
-            'data'      => $data,
+            'data'          => $data,
             'count'         => $menu->total(),
             'page'          => $menu->render(),
         ]);
@@ -152,8 +152,45 @@ class Menu extends Base
                 $result = $this->service->add($data,$scene,$alone);
             }
             if ($result['status'] > 0) {
-                session(config('admin.session_admin_auth') . $this->adminId,null,config('admin.session_admin_scope'));
-                session(config('admin.session_admin_menu'),null,config('admin.session_admin_scope'));
+                if(!$is_update && $data['level'] == 2){
+                    $child = [
+                        [
+                            'parent_id'     => $result['data']['id'],
+                            'module'        => $data['module'],
+                            'level'         => 3,
+                            'controller'    => $data['controller'],
+                            'action'        => 'create',
+                            'params'        => $data['params'],
+                            'name'          => '添加',
+                            'show'          => 1
+                        ],
+                        [
+                            'parent_id'     => $result['data']['id'],
+                            'module'        => $data['module'],
+                            'level'         => 3,
+                            'controller'    => $data['controller'],
+                            'params'        => $data['params'],
+                            'action'        => 'edit',
+                            'name'          => '编辑',
+                            'show'          => 1
+                        ]
+                    ];
+                    $model = new \app\admin\model\Menu();
+                    $model->saveAll($child);
+                }
+
+                $redis = redis(config('admin.admin_redis_select'));
+                $keys = $redis->keys(config('admin.session_admin_auth') . '*');
+                $redis->del($keys);
+                $keys = $redis->keys(config('admin.session_admin_menu') . '*');
+                $redis->del($keys);
+                $keys = $redis->keys(config('admin.session_admin_auth_check') . '*');
+                $redis->del($keys);
+                $keys = $redis->keys(config('admin.session_admin_auth_check_navP') . '*');
+                $redis->del($keys);
+                $keys = $redis->keys(config('admin.session_admin_auth_check_nav') . '*');
+                $redis->del($keys);
+
                 return show(1, lang('action_success'));
             } else {
                 return show(-1, $result['message']);

@@ -10,6 +10,8 @@ class Base extends Model
     // 自动写入时间戳字段
     protected $autoWriteTimestamp = 'date';
     protected $dateFormat = 'Y-m-d H:i:s';
+    // 定义时间戳字段名
+    protected $deleteTime = 'delete_time';
 
     public function insertUpdate($data, $id, $is_update = true)
     {

@@ -1,0 +1,64 @@
+{extend name="public/_base" /}
+
+{block name="title"}<title>管理员日志 - 权限管理</title>{/block}
+
+{block name="right"}
+
+<!-- page content -->
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>管理员日志</h3>
+            </div>
+        </div>
+        <div class="row">
+            {:widget('AdminLogWidget/search')}
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>列表</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <table class="table table-striped bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                <th style="width: 7%">ID</th>
+                                <th style="width: 8%">{$Think.lang.username}</th>
+                                <th style="width: 15%">{$Think.lang.url}</th>
+                                <th style="width: 15%">{$Think.lang.title}</th>
+                                <th style="width: 10%">{$Think.lang.ip}</th>
+                                <th style="width: 25%">{$Think.lang.user_agent}</th>
+                                <th style="width: 15%">{$Think.lang.create_time}</th>
+                                <th style="width: 5%">{$Think.lang.action}</th>
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            {foreach $data as $vo }
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.username}</td>
+                                <td>{$vo.url}</td>
+                                <td>{$vo.title}</td>
+                                <td>{$vo.ip}</td>
+                                <td data-toggle="tooltip" data-placement="top"  data-original-title="{$vo.user_agent}">{$vo.user_agent}</td>
+                                <td>{$vo.create_time}</td>
+                                <td>
+                                    {:authAction('/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/content', '内容','content',true,$vo.id,800)}
+                                </td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                        {include file="widget/page" /}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- /page content -->
+{/block}

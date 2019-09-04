@@ -30,15 +30,15 @@ class Admin extends Base
             $ids = array_filter(explode(',',$ids));
         }
         foreach ($ids as $v){
-
-            $redis->delete(config('admin.session_admin_auth') . $v);
-            $redis->delete(config('admin.session_admin_menu') . $v);
-
-            $keys = $redis->keys(config('admin.session_admin_auth_check') . $v);
+            $keys = $redis->keys(config('admin.session_admin_auth') . $v.'*');
             $redis->del($keys);
-            $keys = $redis->keys(config('admin.session_admin_auth_check_navP') . $v);
+            $keys = $redis->keys(config('admin.session_admin_menu') . $v.'*');
             $redis->del($keys);
-            $keys = $redis->keys(config('admin.session_admin_auth_check_nav') . $v);
+            $keys = $redis->keys(config('admin.session_admin_auth_check') . $v.'*');
+            $redis->del($keys);
+            $keys = $redis->keys(config('admin.session_admin_auth_check_navP') . $v.'*');
+            $redis->del($keys);
+            $keys = $redis->keys(config('admin.session_admin_auth_check_nav') . $v.'*');
             $redis->del($keys);
         }
         return true;
